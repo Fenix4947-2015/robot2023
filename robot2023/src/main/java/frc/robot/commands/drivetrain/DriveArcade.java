@@ -19,7 +19,7 @@ public class DriveArcade extends CommandBase {
     @Override
     public void execute() {
         double speed = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
-        double rotation = m_controller.getLeftX();
+        double rotation = -m_controller.getLeftX();
 
         m_driveTrain.arcadeDrive(speed, rotation);
     }
