@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.StartMotor;
 import frc.robot.commands.StopAll;
+import frc.robot.commands.StopArm;
 import frc.robot.commands.StopMotor;
 import frc.robot.commands.drivetrain.DriveArcade;
 import frc.robot.subsystems.DriveTrain;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -48,9 +50,7 @@ public class RobotContainer {
   private final CommandBase m_shiftHigh = new InstantCommand(m_driveTrain::shiftHigh);
   private final CommandBase m_shiftLow = new InstantCommand(m_driveTrain::shiftLow);
   private final CommandBase m_stopAll = new StopAll(m_driveTrain);
-
-  private final StartMotor m_startMotor = new StartMotor(m_exampleSubsystem);
-  private final StopMotor m_stopMotor = new StopMotor(m_exampleSubsystem);
+  private final StopArm m_stopArm = new StopArm(m_gripperArm);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -62,9 +62,8 @@ public class RobotContainer {
   }
 
   private void configureDefaultCommands() {
-    m_exampleSubsystem.setDefaultCommand(m_stopMotor);
     m_driveTrain.setDefaultCommand(m_driveArcade);
-    m_gripperArm.setDefaultCommand(new InstantCommand(m_gripperArm::stopForearm));
+    m_gripperArm.setDefaultCommand(m_stopArm);
   }
 
   private void configureAutonomousCommands() {
