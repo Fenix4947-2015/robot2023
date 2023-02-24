@@ -13,6 +13,7 @@ import frc.robot.commands.StopMotor;
 import frc.robot.commands.drivetrain.DriveArcade;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.GripperArm;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -38,6 +39,7 @@ public class RobotContainer {
 
   // Subsystems.
   private final DriveTrain m_driveTrain = new DriveTrain();
+  private final GripperArm m_gripperArm = new GripperArm();
   
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
@@ -62,6 +64,7 @@ public class RobotContainer {
   private void configureDefaultCommands() {
     m_exampleSubsystem.setDefaultCommand(m_stopMotor);
     m_driveTrain.setDefaultCommand(m_driveArcade);
+    m_gripperArm.setDefaultCommand(new InstantCommand(m_gripperArm::stopForearm));
   }
 
   private void configureAutonomousCommands() {
@@ -128,6 +131,8 @@ private void configureSmartDashboard() {
 
     m_driverController.a().onTrue(m_shiftHigh);
     m_driverController.x().onTrue(m_shiftLow);
+    m_driverController.b().whileTrue(new InstantCommand(m_gripperArm::downForeArm));
+    m_driverController.y().whileTrue(new InstantCommand(m_gripperArm::upForearm));
   }
 
   /**
