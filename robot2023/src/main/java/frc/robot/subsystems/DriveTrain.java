@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveTrainConstants;
 
+import static edu.wpi.first.wpilibj.PneumaticsModuleType.CTREPCM;
+
 public class DriveTrain extends SubsystemBase {
 
     private static final double GO_STRAIGHT_COMP_DEFAULT = 0.23;
@@ -24,7 +26,7 @@ public class DriveTrain extends SubsystemBase {
     private final CANSparkMax m_rightLeader = new CANSparkMax(DriveTrainConstants.kRightLeaderDeviceId, MotorType.kBrushless);
     private final CANSparkMax m_rightFollower = new CANSparkMax(DriveTrainConstants.kRightFollowerDeviceId, MotorType.kBrushless);
 
-    private final Solenoid m_shifter = new Solenoid(PneumaticsModuleType.CTREPCM, DriveTrainConstants.kShifterSolenoidChannelId);
+    private final Solenoid m_shifter = new Solenoid(CTREPCM, DriveTrainConstants.kShifterSolenoidChannelId);
 
     private final WPI_TalonSRX m_spareTalon = new WPI_TalonSRX(DriveTrainConstants.kSpareTalonDeviceNumber);
     private final WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(m_spareTalon);

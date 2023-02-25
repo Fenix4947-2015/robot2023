@@ -4,23 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.StartMotor;
 import frc.robot.commands.StopAll;
 import frc.robot.commands.StopArm;
-import frc.robot.commands.StopMotor;
 import frc.robot.commands.drivetrain.DriveArcade;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.GripperArm;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -42,8 +34,6 @@ public class RobotContainer {
   // Subsystems.
   private final DriveTrain m_driveTrain = new DriveTrain();
   private final GripperArm m_gripperArm = new GripperArm();
-  
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Commands.
   private final DriveArcade m_driveArcade = new DriveArcade(m_driverController.getHID(), m_driveTrain);
@@ -51,6 +41,11 @@ public class RobotContainer {
   private final CommandBase m_shiftLow = new InstantCommand(m_driveTrain::shiftLow);
   private final CommandBase m_stopAll = new StopAll(m_driveTrain);
   private final StopArm m_stopArm = new StopArm(m_gripperArm);
+
+  private final CommandBase m_raiseForeArm = new RunCommand(m_gripperArm::upForearm, m_gripperArm);
+  private final CommandBase m_lowerForeArm = new RunCommand(m_gripperArm::downForeArm, m_gripperArm);
+  private final CommandBase m_lockElbow = new InstantCommand(m_gripperArm::lockElbow);
+  private final CommandBase m_unlockElbow = new InstantCommand(m_gripperArm::unlockElbow);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -128,10 +123,14 @@ private void configureSmartDashboard() {
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     //m_driverController.a().whileTrue(m_startMotor);
 
-    m_driverController.a().onTrue(m_shiftHigh);
-    m_driverController.x().onTrue(m_shiftLow);
-    m_driverController.b().whileTrue(new InstantCommand(m_gripperArm::downForeArm));
-    m_driverController.y().whileTrue(new InstantCommand(m_gripperArm::upForearm));
+    m_driverController.rightBumper().onTrue(m_shiftHigh);
+    m_driverController.leftBumper().onTrue(m_shiftLow);
+    m_driverController.b().whileTrue(m_lowerForeArm);
+    m_driverController.y().whileTrue(m_raiseForeArm);
+    m_driverController.x().onTrue(m_unlockElbow);
+    m_driverController.a().onTrue(m_lockElbow);
+    m_driverController.back().onTrue(new InstantCommand(m_gripperArm::toggleStage1));
+    m_driverController.start().onTrue(new InstantCommand(m_gripperArm::toggleStage2));
   }
 
   /**
@@ -141,6 +140,7 @@ private void configureSmartDashboard() {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    //return Autos.exampleAuto(m_exampleSubsystem);
+    return m_stopAll;
   }
 }

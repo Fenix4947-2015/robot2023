@@ -31,7 +31,7 @@ public final class Constants {
     public static final int kRightLeaderDeviceId = 21;
     public static final int kRightFollowerDeviceId = 29;
 
-    public static final int kShifterSolenoidChannelId = 2;
+    public static final int kShifterSolenoidChannelId = 3;
 
     private static final double kGearRatioLow = 10.86;
     private static final double kGearRatioHigh = 6.0;

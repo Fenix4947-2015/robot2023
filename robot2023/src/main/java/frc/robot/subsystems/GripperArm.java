@@ -8,12 +8,21 @@
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+  import edu.wpi.first.wpilibj.PneumaticsModuleType;
+  import edu.wpi.first.wpilibj.Solenoid;
   import edu.wpi.first.wpilibj2.command.CommandBase;
   import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+  import static edu.wpi.first.wpilibj.PneumaticsModuleType.CTREPCM;
 
   public class GripperArm extends SubsystemBase {
     private final CANSparkMax m_foreArmLeader = new CANSparkMax(42, MotorType.kBrushed);
     private final CANSparkMax m_foreArmFollower = new CANSparkMax(43, MotorType.kBrushed);
+
+    private final Solenoid m_lockElbow = new Solenoid(CTREPCM, 0);
+    private final Solenoid m_verticalArmStage1 = new Solenoid(CTREPCM, 1);
+    private final Solenoid m_verticalArmStage2 = new Solenoid(CTREPCM, 2);
+    private final Solenoid m_gripper = new Solenoid(CTREPCM, 6);
 
 
     /** Creates a new GripperArm. */
@@ -62,14 +71,46 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
     }
 
     public void upForearm() {
-      m_foreArmLeader.set(0.25);
+      m_foreArmLeader.set(-0.25);
     }
 
     public void downForeArm() {
-      m_foreArmLeader.set(-0.25);
+      m_foreArmLeader.set(0.25);
     }
 
     public void stopForearm() {
       m_foreArmLeader.set(0.0);
+    }
+
+    public void lockElbow() {
+      m_lockElbow.set(true);
+    }
+
+    public void unlockElbow() {
+      m_lockElbow.set(false);
+    }
+
+    public void enableStage1() {
+      m_verticalArmStage1.set(true);
+    }
+
+    public void disableStage1() {
+      m_verticalArmStage1.set(false);
+    }
+
+    public void toggleStage1() {
+      m_verticalArmStage1.toggle();
+    }
+
+    public void enableStage2() {
+      m_verticalArmStage2.set(true);
+    }
+
+    public void disableStage2() {
+      m_verticalArmStage2.set(false);
+    }
+
+    public void toggleStage2() {
+      m_verticalArmStage2.toggle();
     }
   }
