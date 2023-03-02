@@ -84,6 +84,14 @@ public class GripperArm extends SubsystemBase {
         // This method will be called once per scheduler run during simulation
     }
 
+    public void moveForearm(double speed) {
+        if (speed > 0.0 && m_encoder.getDistance() >= currentVerticalArmPosition.maxAngleEncoderValue) {
+            m_foreArmLeader.set(0.0);
+        } else {
+            m_foreArmLeader.set(speed);
+        }
+    }
+
     public void upForearm() {
         if (m_encoder.getDistance() >= currentVerticalArmPosition.maxAngleEncoderValue) {
             m_foreArmLeader.set(0);
@@ -116,20 +124,12 @@ public class GripperArm extends SubsystemBase {
         m_verticalArmStage1.set(false);
     }
 
-    public void toggleStage1() {
-        m_verticalArmStage1.toggle();
-    }
-
     private void enableStage2() {
         m_verticalArmStage2.set(true);
     }
 
     private void disableStage2() {
         m_verticalArmStage2.set(false);
-    }
-
-    public void toggleStage2() {
-        m_verticalArmStage2.toggle();
     }
 
     public void moveVerticalArmForward() {
@@ -204,7 +204,7 @@ public class GripperArm extends SubsystemBase {
 
         public final double maxAngleEncoderValue;
 
-        private VerticalArmPosition(double value) {
+        VerticalArmPosition(double value) {
             maxAngleEncoderValue = value;
         }
 

@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.StopAll;
-import frc.robot.commands.StopArm;
 import frc.robot.commands.drivetrain.DriveArcade;
+import frc.robot.commands.gripperarm.MoveForearm;
+import frc.robot.commands.gripperarm.StopArm;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.GripperArm;
 
@@ -40,6 +41,7 @@ public class RobotContainer {
     private final CommandBase m_shiftLow = new InstantCommand(m_driveTrain::shiftLow);
     private final CommandBase m_stopAll = new StopAll(m_driveTrain);
     private final StopArm m_stopArm = new StopArm(m_gripperArm);
+    private final MoveForearm m_moveForearm = new MoveForearm(m_gripperArm, m_driverController.getHID());
 
     private final CommandBase m_raiseForeArm = new RunCommand(m_gripperArm::upForearm, m_gripperArm);
     private final CommandBase m_lowerForeArm = new RunCommand(m_gripperArm::downForeArm, m_gripperArm);
@@ -59,7 +61,7 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         m_driveTrain.setDefaultCommand(m_driveArcade);
-        m_gripperArm.setDefaultCommand(m_stopArm);
+        m_gripperArm.setDefaultCommand(m_moveForearm);
     }
 
     private void configureAutonomousCommands() {
@@ -130,15 +132,13 @@ public class RobotContainer {
         m_driverController.y().whileTrue(m_raiseForeArm);
         m_driverController.x().onTrue(m_unlockElbow);
         m_driverController.a().onTrue(m_lockElbow);
-        m_driverController.back().onTrue(new InstantCommand(m_gripperArm::toggleStage1));
-        m_driverController.start().onTrue(new InstantCommand(m_gripperArm::toggleStage2));
 
         m_driverController.povLeft().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmBackward));
         m_driverController.povRight().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmForward));
     }
 
     public void teleopInit() {
-      m_gripperArm.initTeleop();
+        m_gripperArm.initTeleop();
     }
 
     /**
