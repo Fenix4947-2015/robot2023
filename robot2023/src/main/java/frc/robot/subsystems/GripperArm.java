@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,9 +24,14 @@ public class GripperArm extends SubsystemBase {
     private final Solenoid m_lockElbow = new Solenoid(CTREPCM, 0);
     private final Solenoid m_verticalArmStage1 = new Solenoid(CTREPCM, 1);
     private final Solenoid m_verticalArmStage2 = new Solenoid(CTREPCM, 2);
+    private final Solenoid m_kickstand = new Solenoid(CTREPCM, 7);
     private final Solenoid m_gripper = new Solenoid(CTREPCM, 6);
 
     private final Encoder m_encoder = new Encoder(0, 1);
+
+    private final DigitalInput m_limitSwitch = new DigitalInput(7);
+
+    private final Double FOREARM_MAX_SPEED = 0.5;
 
     private VerticalArmPosition currentVerticalArmPosition = VerticalArmPosition.REAR;
 
@@ -44,7 +51,7 @@ public class GripperArm extends SubsystemBase {
     }
 
     public void initTeleop() {
-        m_encoder.reset();
+        resetEncoder();
         positionVerticalArm();
     }
 
@@ -77,11 +84,17 @@ public class GripperArm extends SubsystemBase {
         // This method will be called once per scheduler run
         SmartDashboard.putNumber("Arm/Encoder", m_encoder.getDistance());
         SmartDashboard.putString("Arm/VerticalPos", currentVerticalArmPosition.name());
+        SmartDashboard.putBoolean("Arm/LimitSwitch", isForearmAtHome());
+        SmartDashboard.putNumber("Arm/ForearmSpeed", getForearmSpeed());
     }
 
     @Override
     public void simulationPeriodic() {
         // This method will be called once per scheduler run during simulation
+    }
+
+    public void resetEncoder() {
+        m_encoder.reset();
     }
 
     public void moveForearm(double speed) {
@@ -96,24 +109,32 @@ public class GripperArm extends SubsystemBase {
         if (m_encoder.getDistance() >= currentVerticalArmPosition.maxAngleEncoderValue) {
             m_foreArmLeader.set(0);
         } else {
-            m_foreArmLeader.set(1.0);
+            m_foreArmLeader.set(FOREARM_MAX_SPEED);
         }
     }
 
     public void downForeArm() {
-        m_foreArmLeader.set(-1.0);
+        m_foreArmLeader.set(-FOREARM_MAX_SPEED);
     }
 
     public void stopForearm() {
         m_foreArmLeader.set(0.0);
     }
 
+    public double getForearmSpeed() {
+        return m_foreArmLeader.get();
+    }
+
+    public boolean isForearmGoingUp() {
+        return this.getForearmSpeed() > -0.01;
+    }
+
     public void lockElbow() {
-        m_lockElbow.set(true);
+        m_lockElbow.set(false);
     }
 
     public void unlockElbow() {
-        m_lockElbow.set(false);
+        m_lockElbow.set(true);
     }
 
     private void enableStage1() {
@@ -211,5 +232,25 @@ public class GripperArm extends SubsystemBase {
         public abstract VerticalArmPosition moveForward(double angleEncoderValue);
 
         public abstract VerticalArmPosition moveBackward(double angleEncoderValue);
+    }
+
+    public void extendKickstand() {
+        m_kickstand.set(false);
+    }
+
+    public void retractKickstand() {
+        m_kickstand.set(true);
+    }
+
+    public void closeGripper() {
+        m_gripper.set(false);
+    }
+
+    public void openGripper() {
+        m_gripper.set(true);
+    }
+
+    public boolean isForearmAtHome() {
+        return m_limitSwitch.get();
     }
 }

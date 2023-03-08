@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.StopAll;
 import frc.robot.commands.drivetrain.DriveArcade;
+import frc.robot.commands.gripperarm.HomeForearm;
 import frc.robot.commands.gripperarm.MoveForearm;
 import frc.robot.commands.gripperarm.StopArm;
 import frc.robot.subsystems.DriveTrain;
@@ -42,11 +43,16 @@ public class RobotContainer {
     private final CommandBase m_stopAll = new StopAll(m_driveTrain);
     private final StopArm m_stopArm = new StopArm(m_gripperArm);
     private final MoveForearm m_moveForearm = new MoveForearm(m_gripperArm, m_driverController.getHID());
+    private final HomeForearm m_homeForearm = new HomeForearm(m_gripperArm);
 
     private final CommandBase m_raiseForeArm = new RunCommand(m_gripperArm::upForearm, m_gripperArm);
     private final CommandBase m_lowerForeArm = new RunCommand(m_gripperArm::downForeArm, m_gripperArm);
+    private final CommandBase m_extendKickstand = new InstantCommand(m_gripperArm::extendKickstand);
+    private final CommandBase m_retractKickstand = new InstantCommand(m_gripperArm::retractKickstand);
     private final CommandBase m_lockElbow = new InstantCommand(m_gripperArm::lockElbow);
     private final CommandBase m_unlockElbow = new InstantCommand(m_gripperArm::unlockElbow);
+    private final CommandBase m_closeGripper = new InstantCommand(m_gripperArm::closeGripper);
+    private final CommandBase m_openGripper = new InstantCommand(m_gripperArm::openGripper);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -128,10 +134,12 @@ public class RobotContainer {
 
         m_driverController.rightBumper().onTrue(m_shiftHigh);
         m_driverController.leftBumper().onTrue(m_shiftLow);
-        m_driverController.b().whileTrue(m_lowerForeArm);
-        m_driverController.y().whileTrue(m_raiseForeArm);
+        m_driverController.b().whileTrue(m_closeGripper);
+        m_driverController.y().whileTrue(m_openGripper);
         m_driverController.x().onTrue(m_unlockElbow);
         m_driverController.a().onTrue(m_lockElbow);
+        m_driverController.povUp().onTrue(m_extendKickstand);
+        m_driverController.povDown().onTrue(m_retractKickstand);
 
         m_driverController.povLeft().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmBackward));
         m_driverController.povRight().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmForward));
@@ -139,6 +147,7 @@ public class RobotContainer {
 
     public void teleopInit() {
         m_gripperArm.initTeleop();
+        m_homeForearm.schedule();;
     }
 
     /**
