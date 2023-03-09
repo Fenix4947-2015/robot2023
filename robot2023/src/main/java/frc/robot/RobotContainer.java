@@ -10,10 +10,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.StopAll;
+import frc.robot.commands.drivetrain.AutoAim;
 import frc.robot.commands.drivetrain.DriveArcade;
 import frc.robot.commands.gripperarm.HomeForearm;
 import frc.robot.commands.gripperarm.MoveForearm;
 import frc.robot.commands.gripperarm.StopArm;
+import frc.robot.limelight.Limelight;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.GripperArm;
 
@@ -35,8 +37,16 @@ public class RobotContainer {
     // Subsystems.
     private final DriveTrain m_driveTrain = new DriveTrain();
     private final GripperArm m_gripperArm = new GripperArm();
+    private final SmartDashboardSettings m_smartDashboardSettings = new SmartDashboardSettings();
+    private final Limelight m_limelight = new Limelight();
 
     // Commands.
+    private final AutoAim _autoAimPick = new AutoAim(AutoAim.AUTOAIM_PICK_PIPELINE, m_driveTrain, m_limelight,
+    m_smartDashboardSettings);
+    private final AutoAim _autoAimPlace = new AutoAim(AutoAim.AUTOAIM_PLACE_PIPELINE, m_driveTrain, m_limelight,
+    m_smartDashboardSettings);
+
+
     private final DriveArcade m_driveArcade = new DriveArcade(m_driverController.getHID(), m_driveTrain);
     private final CommandBase m_shiftHigh = new InstantCommand(m_driveTrain::shiftHigh);
     private final CommandBase m_shiftLow = new InstantCommand(m_driveTrain::shiftLow);
@@ -45,8 +55,6 @@ public class RobotContainer {
     private final MoveForearm m_moveForearm = new MoveForearm(m_gripperArm, m_driverController.getHID());
     private final HomeForearm m_homeForearm = new HomeForearm(m_gripperArm);
 
-    private final CommandBase m_raiseForeArm = new RunCommand(m_gripperArm::upForearm, m_gripperArm);
-    private final CommandBase m_lowerForeArm = new RunCommand(m_gripperArm::downForeArm, m_gripperArm);
     private final CommandBase m_extendKickstand = new InstantCommand(m_gripperArm::extendKickstand);
     private final CommandBase m_retractKickstand = new InstantCommand(m_gripperArm::retractKickstand);
     private final CommandBase m_lockElbow = new InstantCommand(m_gripperArm::lockElbow);
@@ -136,13 +144,15 @@ public class RobotContainer {
         m_driverController.leftBumper().onTrue(m_shiftLow);
         m_driverController.b().whileTrue(m_closeGripper);
         m_driverController.y().whileTrue(m_openGripper);
-        m_driverController.x().onTrue(m_unlockElbow);
-        m_driverController.a().onTrue(m_lockElbow);
+        m_helperController.a().whileTrue(_autoAimPick);
         m_driverController.povUp().onTrue(m_extendKickstand);
         m_driverController.povDown().onTrue(m_retractKickstand);
-
+        
         m_driverController.povLeft().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmBackward));
         m_driverController.povRight().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmForward));
+
+        m_helperController.x().onTrue(m_unlockElbow);
+        m_helperController.a().onTrue(m_lockElbow);
     }
 
     public void teleopInit() {
