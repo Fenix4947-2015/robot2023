@@ -144,7 +144,7 @@ public class RobotContainer {
         m_driverController.leftBumper().onTrue(m_shiftLow);
         m_driverController.b().whileTrue(m_closeGripper);
         m_driverController.y().whileTrue(m_openGripper);
-        m_helperController.a().whileTrue(_autoAimPick);
+        m_driverController.a().whileTrue(_autoAimPick);
         m_driverController.povUp().onTrue(m_extendKickstand);
         m_driverController.povDown().onTrue(m_retractKickstand);
         
