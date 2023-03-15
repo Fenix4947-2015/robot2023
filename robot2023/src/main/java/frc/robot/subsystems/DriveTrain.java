@@ -13,22 +13,25 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveTrainConstants;
 
 import static edu.wpi.first.wpilibj.PneumaticsModuleType.CTREPCM;
 
 public class DriveTrain extends SubsystemBase {
 
+    private final Constants.HardwareConstants hardwareConstants = Constants.currentHardwareConstants();
+
     private static final double GO_STRAIGHT_COMP_DEFAULT = 0.23;
 
-    private final CANSparkMax m_leftLeader = new CANSparkMax(DriveTrainConstants.kLeftLeaderDeviceId, MotorType.kBrushless);
-    private final CANSparkMax m_leftFollower = new CANSparkMax(DriveTrainConstants.kLeftFollowerDeviceId, MotorType.kBrushless);
-    private final CANSparkMax m_rightLeader = new CANSparkMax(DriveTrainConstants.kRightLeaderDeviceId, MotorType.kBrushless);
-    private final CANSparkMax m_rightFollower = new CANSparkMax(DriveTrainConstants.kRightFollowerDeviceId, MotorType.kBrushless);
+    private final CANSparkMax m_leftLeader = new CANSparkMax(hardwareConstants.getLeftLeaderDeviceId(), MotorType.kBrushless);
+    private final CANSparkMax m_leftFollower = new CANSparkMax(hardwareConstants.getLeftFollowerDeviceId(), MotorType.kBrushless);
+    private final CANSparkMax m_rightLeader = new CANSparkMax(hardwareConstants.getRightLeaderDeviceId(), MotorType.kBrushless);
+    private final CANSparkMax m_rightFollower = new CANSparkMax(hardwareConstants.getRightFollowerDeviceId(), MotorType.kBrushless);
 
-    private final Solenoid m_shifter = new Solenoid(CTREPCM, DriveTrainConstants.kShifterSolenoidChannelId);
+    private final Solenoid m_shifter = new Solenoid(CTREPCM, hardwareConstants.getShifterSolenoidChannelId());
 
-    private final WPI_TalonSRX m_spareTalon = new WPI_TalonSRX(DriveTrainConstants.kSpareTalonDeviceNumber);
+    private final WPI_TalonSRX m_spareTalon = new WPI_TalonSRX(hardwareConstants.getSpareTalonDeviceNumber());
     private final WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(m_spareTalon);
 
     private final DifferentialDrive m_drive = new DifferentialDrive(m_leftLeader, m_rightLeader);

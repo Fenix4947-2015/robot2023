@@ -7,29 +7,31 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 import static edu.wpi.first.wpilibj.PneumaticsModuleType.CTREPCM;
 
 public class GripperArm extends SubsystemBase {
-    private final CANSparkMax m_foreArmLeader = new CANSparkMax(42, MotorType.kBrushed);
-    private final CANSparkMax m_foreArmFollower = new CANSparkMax(43, MotorType.kBrushed);
+    private final Constants.HardwareConstants hardwareConstants = Constants.currentHardwareConstants();
 
-    private final Solenoid m_lockElbow = new Solenoid(CTREPCM, 0);
-    private final Solenoid m_verticalArmStage1 = new Solenoid(CTREPCM, 1);
-    private final Solenoid m_verticalArmStage2 = new Solenoid(CTREPCM, 2);
-    private final Solenoid m_kickstand = new Solenoid(CTREPCM, 7);
-    private final Solenoid m_gripper = new Solenoid(CTREPCM, 6);
+    private final CANSparkMax m_foreArmLeader = new CANSparkMax(hardwareConstants.getForeArmLeaderId(), MotorType.kBrushed);
+    private final CANSparkMax m_foreArmFollower = new CANSparkMax(hardwareConstants.getForeArmFollowerId(), MotorType.kBrushed);
 
-    private final Encoder m_encoder = new Encoder(0, 1);
+    private final Solenoid m_lockElbow = new Solenoid(CTREPCM, hardwareConstants.getLockElbowSolenoidChannel());
+    private final Solenoid m_verticalArmStage1 = new Solenoid(CTREPCM, hardwareConstants.getVerticalArmStage1SolenoidChannel());
+    private final Solenoid m_verticalArmStage2 = new Solenoid(CTREPCM, hardwareConstants.getVerticalArmStage2SolenoidChannel());
+    private final Solenoid m_kickstand = new Solenoid(CTREPCM, hardwareConstants.getKickstandSolenoidChannel());
+    private final Solenoid m_gripper = new Solenoid(CTREPCM, hardwareConstants.getGripperSolenoidChannel());
 
-    private final DigitalInput m_limitSwitch = new DigitalInput(7);
+    private final Encoder m_encoder = new Encoder(hardwareConstants.getArmEncoderChannel1(), hardwareConstants.getArmEncoderChannel2());
+
+    private final DigitalInput m_limitSwitch = new DigitalInput(hardwareConstants.getArmLimitSwitchDigitalInput());
 
     private final Double FOREARM_MAX_SPEED = 0.5;
 
@@ -69,16 +71,6 @@ public class GripperArm extends SubsystemBase {
                 });
     }
 
-    /**
-     * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-     *
-     * @return value of some boolean subsystem state, such as a digital sensor.
-     */
-    public boolean exampleCondition() {
-        // Query some boolean state, such as a digital sensor.
-        return false;
-    }
-
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
@@ -97,24 +89,20 @@ public class GripperArm extends SubsystemBase {
         m_encoder.reset();
     }
 
+    public double getEncoderDistance() {
+        return m_encoder.getDistance();
+    }
+
+    public VerticalArmPosition getCurrentVerticalArmPosition() {
+        return currentVerticalArmPosition;
+    }
+
     public void moveForearm(double speed) {
         if (speed > 0.0 && m_encoder.getDistance() >= currentVerticalArmPosition.maxAngleEncoderValue) {
             m_foreArmLeader.set(0.0);
         } else {
             m_foreArmLeader.set(speed);
         }
-    }
-
-    public void upForearm() {
-        if (m_encoder.getDistance() >= currentVerticalArmPosition.maxAngleEncoderValue) {
-            m_foreArmLeader.set(0);
-        } else {
-            m_foreArmLeader.set(FOREARM_MAX_SPEED);
-        }
-    }
-
-    public void downForeArm() {
-        m_foreArmLeader.set(-FOREARM_MAX_SPEED);
     }
 
     public void stopForearm() {
@@ -180,6 +168,30 @@ public class GripperArm extends SubsystemBase {
         }
     }
 
+    public void extendKickstand() {
+        m_kickstand.set(true);
+    }
+
+    public void retractKickstand() {
+        m_kickstand.set(false);
+    }
+
+    public boolean isKickstandExtended() {
+        return m_kickstand.get();
+    }
+
+    public void closeGripper() {
+        m_gripper.set(false);
+    }
+
+    public void openGripper() {
+        m_gripper.set(true);
+    }
+
+    public boolean isForearmAtHome() {
+        return m_limitSwitch.get();
+    }
+
     public enum VerticalArmPosition {
         REAR(22.5) {
             @Override
@@ -232,25 +244,5 @@ public class GripperArm extends SubsystemBase {
         public abstract VerticalArmPosition moveForward(double angleEncoderValue);
 
         public abstract VerticalArmPosition moveBackward(double angleEncoderValue);
-    }
-
-    public void extendKickstand() {
-        m_kickstand.set(false);
-    }
-
-    public void retractKickstand() {
-        m_kickstand.set(true);
-    }
-
-    public void closeGripper() {
-        m_gripper.set(false);
-    }
-
-    public void openGripper() {
-        m_gripper.set(true);
-    }
-
-    public boolean isForearmAtHome() {
-        return m_limitSwitch.get();
     }
 }

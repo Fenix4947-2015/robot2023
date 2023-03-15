@@ -16,48 +16,158 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    private static final HardwareConstants CLONE_HARDWARE_CONSTANTS = new CloneHardwareConstants();
 
-    public static final int kHelperControllerPort = 1;
+    public static HardwareConstants currentHardwareConstants() {
+        return CLONE_HARDWARE_CONSTANTS;
+    }
 
-    public static final double kDeadband = 0.15;
-  }
+    public interface HardwareConstants {
+        int getLeftLeaderDeviceId();
 
-  public static class DriveTrainConstants {
-    public static final int kLeftLeaderDeviceId = 41;
-    public static final int kLeftFollowerDeviceId = 31;
+        int getLeftFollowerDeviceId();
 
-    public static final int kRightLeaderDeviceId = 21;
-    public static final int kRightFollowerDeviceId = 29;
+        int getRightLeaderDeviceId();
 
-    public static final int kShifterSolenoidChannelId = 3;
+        int getRightFollowerDeviceId();
 
-    private static final double kGearRatioLow = 10.86;
-    private static final double kGearRatioHigh = 6.0;
-    private static final double kWheelDiameterMeters = Units.inchesToMeters(6.0);
+        int getShifterSolenoidChannelId();
 
-    public static final double kEncoderPositionConversionFactorLow = (Math.PI * kWheelDiameterMeters) / kGearRatioLow;          // in meters
-    public static final double kEncoderVelocityConversionFactorLow = (Math.PI * kWheelDiameterMeters) / (kGearRatioLow * 60.0); // in meters per second
-    public static final double kEncoderPositionConversionFactorHigh = (Math.PI * kWheelDiameterMeters) / kGearRatioHigh;          // in meters
-    public static final double kEncoderVelocityConversionFactorHigh = (Math.PI * kWheelDiameterMeters) / (kGearRatioHigh * 60.0); // in meters per second
+        int getForeArmLeaderId();
 
-    public static final int kSpareTalonDeviceNumber = 9;
+        int getForeArmFollowerId();
 
-    public static final double kTurnP = 10.0;
-    public static final double kTurnI = 8.0;
-    public static final double kTurnD = 0;
-    public static final double kTurnToleranceDegrees = 5;
-    public static final double kTurnRateToleranceDegreesPerSec = 10; // degrees per second
+        int getLockElbowSolenoidChannel();
 
-    // Constants obtained from SysId
-    public static final double ksLow = 0.14344;
-    public static final double kvLow = 1.4602;
-    public static final double kaLow = 0.77896;
-    public static final double kpLow = 50.149;
-    public static final double kdLow = 8.0681;
+        int getVerticalArmStage1SolenoidChannel();
 
-    public static final SimpleMotorFeedforward m_feedFwdLow = new SimpleMotorFeedforward(ksLow, kvLow, kaLow);
-  }
+        int getVerticalArmStage2SolenoidChannel();
+
+        int getKickstandSolenoidChannel();
+
+        int getGripperSolenoidChannel();
+
+        int getArmEncoderChannel1();
+
+        int getArmEncoderChannel2();
+        int getArmLimitSwitchDigitalInput();
+
+        int getSpareTalonDeviceNumber();
+    }
+
+    public static class OperatorConstants {
+        public static final int kDriverControllerPort = 0;
+
+        public static final int kHelperControllerPort = 1;
+
+        public static final double kDeadband = 0.15;
+    }
+
+    public static class CloneHardwareConstants implements HardwareConstants {
+
+        @Override
+        public int getLeftLeaderDeviceId() {
+            return 41;
+        }
+
+        @Override
+        public int getLeftFollowerDeviceId() {
+            return 31;
+        }
+
+        @Override
+        public int getRightLeaderDeviceId() {
+            return 21;
+        }
+
+        @Override
+        public int getRightFollowerDeviceId() {
+            return 29;
+        }
+
+        @Override
+        public int getShifterSolenoidChannelId() {
+            return 3;
+        }
+
+        @Override
+        public int getForeArmLeaderId() {
+            return 42;
+        }
+
+        @Override
+        public int getForeArmFollowerId() {
+            return 43;
+        }
+
+        @Override
+        public int getLockElbowSolenoidChannel() {
+            return 0;
+        }
+
+        @Override
+        public int getVerticalArmStage1SolenoidChannel() {
+            return 1;
+        }
+
+        @Override
+        public int getVerticalArmStage2SolenoidChannel() {
+            return 2;
+        }
+
+        @Override
+        public int getKickstandSolenoidChannel() {
+            return 7;
+        }
+
+        @Override
+        public int getGripperSolenoidChannel() {
+            return 6;
+        }
+
+        @Override
+        public int getSpareTalonDeviceNumber() {
+            return 9;
+        }
+
+        @Override
+        public int getArmEncoderChannel1() {
+            return 0;
+        }
+
+        @Override
+        public int getArmEncoderChannel2() {
+            return 1;
+        }
+
+        @Override
+        public int getArmLimitSwitchDigitalInput() {
+            return 7;
+        }
+
+    }
+
+    public static class DriveTrainConstants {
+
+        public static final double kTurnP = 10.0;
+        public static final double kTurnI = 8.0;
+        public static final double kTurnD = 0;
+        public static final double kTurnToleranceDegrees = 5;
+        public static final double kTurnRateToleranceDegreesPerSec = 10; // degrees per second
+        // Constants obtained from SysId
+        public static final double ksLow = 0.14344;
+        public static final double kvLow = 1.4602;
+        public static final double kaLow = 0.77896;
+        public static final double kpLow = 50.149;
+        public static final double kdLow = 8.0681;
+        public static final SimpleMotorFeedforward m_feedFwdLow = new SimpleMotorFeedforward(ksLow, kvLow, kaLow);
+        private static final double kGearRatioLow = 10.86;
+        private static final double kGearRatioHigh = 6.0;
+        private static final double kWheelDiameterMeters = Units.inchesToMeters(6.0);
+        public static final double kEncoderPositionConversionFactorLow = (Math.PI * kWheelDiameterMeters) / kGearRatioLow;          // in meters
+        public static final double kEncoderVelocityConversionFactorLow = (Math.PI * kWheelDiameterMeters) / (kGearRatioLow * 60.0); // in meters per second
+        public static final double kEncoderPositionConversionFactorHigh = (Math.PI * kWheelDiameterMeters) / kGearRatioHigh;          // in meters
+        public static final double kEncoderVelocityConversionFactorHigh = (Math.PI * kWheelDiameterMeters) / (kGearRatioHigh * 60.0); // in meters per second
+    }
 
 }
