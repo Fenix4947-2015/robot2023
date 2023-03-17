@@ -142,13 +142,18 @@ public class GripperArm extends SubsystemBase {
     }
 
     public void moveVerticalArmForward() {
-        currentVerticalArmPosition = currentVerticalArmPosition.moveForward(m_encoder.getDistance());
-        positionVerticalArm();
+        moveVerticalArm(currentVerticalArmPosition.moveForward());
     }
 
     public void moveVerticalArmBackward() {
-        currentVerticalArmPosition = currentVerticalArmPosition.moveBackward(m_encoder.getDistance());
-        positionVerticalArm();
+        moveVerticalArm(currentVerticalArmPosition.moveBackward());
+    }
+
+    public void moveVerticalArm(VerticalArmPosition newPosition) {
+        if (getEncoderDistance() < newPosition.maxAngleEncoderValue) {
+            currentVerticalArmPosition = newPosition;
+            positionVerticalArm();
+        }
     }
 
     private void positionVerticalArm() {
@@ -193,56 +198,50 @@ public class GripperArm extends SubsystemBase {
     }
 
     public enum VerticalArmPosition {
-        REAR(22.5) {
+        REAR(0.5, 22.5) {
             @Override
-            public VerticalArmPosition moveForward(double angleEncoderValue) {
+            public VerticalArmPosition moveForward() {
                 return CENTRE;
             }
 
             @Override
-            public VerticalArmPosition moveBackward(double angleEncoderValue) {
+            public VerticalArmPosition moveBackward() {
                 return REAR;
             }
         },
-        CENTRE(26) {
+        CENTRE(0.5, 26) {
             @Override
-            public VerticalArmPosition moveForward(double angleEncoderValue) {
+            public VerticalArmPosition moveForward() {
                 return FORWARD;
             }
 
             @Override
-            public VerticalArmPosition moveBackward(double angleEncoderValue) {
-                // empèche de reculer le bras dans une position qui bloquerait
-                if (angleEncoderValue > REAR.maxAngleEncoderValue) {
-                    return this;
-                }
+            public VerticalArmPosition moveBackward() {
                 return REAR;
             }
         },
-        FORWARD(31.5) {
+        FORWARD(3.0, 31.5) {
             @Override
-            public VerticalArmPosition moveForward(double angleEncoderValue) {
+            public VerticalArmPosition moveForward() {
                 return FORWARD;
             }
 
             @Override
-            public VerticalArmPosition moveBackward(double angleEncoderValue) {
-                // empèche de reculer le bras dans une position qui bloquerait
-                if (angleEncoderValue > CENTRE.maxAngleEncoderValue) {
-                    return this;
-                }
+            public VerticalArmPosition moveBackward() {
                 return CENTRE;
             }
         };
 
         public final double maxAngleEncoderValue;
+        public final double minAngleEncoderValue;
 
-        VerticalArmPosition(double value) {
-            maxAngleEncoderValue = value;
+        VerticalArmPosition(double minAngleEncoderValue, double maxAngleEncoderValue) {
+            this.minAngleEncoderValue = minAngleEncoderValue;
+            this.maxAngleEncoderValue = maxAngleEncoderValue;
         }
 
-        public abstract VerticalArmPosition moveForward(double angleEncoderValue);
+        public abstract VerticalArmPosition moveForward();
 
-        public abstract VerticalArmPosition moveBackward(double angleEncoderValue);
+        public abstract VerticalArmPosition moveBackward();
     }
 }

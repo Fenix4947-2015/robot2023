@@ -1,5 +1,6 @@
 package frc.robot.commands.drivetrain;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
@@ -8,6 +9,8 @@ public class DriveArcade extends CommandBase {
 
     private final XboxController m_controller;
     private final DriveTrain m_driveTrain;
+
+    private final SlewRateLimiter m_slewRateLimiter = new SlewRateLimiter(3.0);
 
     public DriveArcade(XboxController controller, DriveTrain driveTrain) {
         m_controller = controller;
@@ -21,6 +24,8 @@ public class DriveArcade extends CommandBase {
         double speed = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
         double rotation = -m_controller.getLeftX();
 
-        m_driveTrain.arcadeDrive(speed, rotation);
+        double rampedSpeed = m_slewRateLimiter.calculate(speed);
+
+        m_driveTrain.arcadeDrive(rampedSpeed, rotation);
     }
 }

@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.StopAll;
-import frc.robot.commands.drivetrain.AutoAim;
+import frc.robot.commands.autonomous.AutoAim;
 import frc.robot.commands.drivetrain.DriveArcade;
+import frc.robot.commands.gripperarm.AutoPositionForearm;
 import frc.robot.commands.gripperarm.HomeForearm;
 import frc.robot.commands.gripperarm.MoveForearm;
 import frc.robot.commands.gripperarm.StopArm;
@@ -61,6 +62,12 @@ public class RobotContainer {
     private final CommandBase m_unlockElbow = new InstantCommand(m_gripperArm::unlockElbow);
     private final CommandBase m_closeGripper = new InstantCommand(m_gripperArm::closeGripper);
     private final CommandBase m_openGripper = new InstantCommand(m_gripperArm::openGripper);
+
+    private final AutoPositionForearm m_positionArmHome = new AutoPositionForearm(m_gripperArm, AutoPositionForearm.ArmPosition.HOME);
+    private final AutoPositionForearm m_positionArmPickElemFloor = new AutoPositionForearm(m_gripperArm, AutoPositionForearm.ArmPosition.PICK_ELEM_FLOOR);
+    private final AutoPositionForearm m_positionArmPickElemStation = new AutoPositionForearm(m_gripperArm, AutoPositionForearm.ArmPosition.PICK_ELEM_STATION);
+    private final AutoPositionForearm m_positionArmPlaceElemMid = new AutoPositionForearm(m_gripperArm, AutoPositionForearm.ArmPosition.PLACE_ELEM_MID);
+    private final AutoPositionForearm m_positionArmPlaceElemTop = new AutoPositionForearm(m_gripperArm, AutoPositionForearm.ArmPosition.PLACE_ELEM_TOP);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -146,8 +153,14 @@ public class RobotContainer {
         m_driverController.povLeft().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmBackward));
         m_driverController.povRight().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmForward));
 
-        m_helperController.x().onTrue(m_unlockElbow);
-        m_helperController.a().onTrue(m_lockElbow);
+        m_helperController.back().onTrue(m_unlockElbow);
+        m_helperController.start().onTrue(m_lockElbow);
+
+        m_helperController.a().whileTrue(m_positionArmHome);
+        m_helperController.b().whileTrue(m_positionArmPickElemFloor);
+        m_helperController.x().whileTrue(m_positionArmPickElemStation);
+        m_helperController.y().whileTrue(m_positionArmPlaceElemMid);
+        m_helperController.rightBumper().whileTrue(m_positionArmPlaceElemTop);
     }
 
     public void teleopInit() {
