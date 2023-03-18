@@ -12,6 +12,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.StopAll;
 import frc.robot.commands.autonomous.AutoAim;
 import frc.robot.commands.drivetrain.DriveArcade;
+import frc.robot.commands.gripperarm.AutoPositionArm;
 import frc.robot.commands.gripperarm.AutoPositionForearm;
 import frc.robot.commands.gripperarm.HomeForearm;
 import frc.robot.commands.gripperarm.MoveForearm;
@@ -54,6 +55,7 @@ public class RobotContainer {
     private final CommandBase m_stopAll = new StopAll(m_driveTrain);
     private final StopArm m_stopArm = new StopArm(m_gripperArm);
     private final MoveForearm m_moveForearm = new MoveForearm(m_gripperArm, m_driverController.getHID());
+    private final AutoPositionForearm m_autoPositionForearm = new AutoPositionForearm(m_gripperArm, m_driverController.getHID());
     private final HomeForearm m_homeForearm = new HomeForearm(m_gripperArm);
 
     private final CommandBase m_extendKickstand = new InstantCommand(m_gripperArm::extendKickstand);
@@ -63,11 +65,11 @@ public class RobotContainer {
     private final CommandBase m_closeGripper = new InstantCommand(m_gripperArm::closeGripper);
     private final CommandBase m_openGripper = new InstantCommand(m_gripperArm::openGripper);
 
-    private final AutoPositionForearm m_positionArmHome = new AutoPositionForearm(m_gripperArm, AutoPositionForearm.ArmPosition.HOME);
-    private final AutoPositionForearm m_positionArmPickElemFloor = new AutoPositionForearm(m_gripperArm, AutoPositionForearm.ArmPosition.PICK_ELEM_FLOOR);
-    private final AutoPositionForearm m_positionArmPickElemStation = new AutoPositionForearm(m_gripperArm, AutoPositionForearm.ArmPosition.PICK_ELEM_STATION);
-    private final AutoPositionForearm m_positionArmPlaceElemMid = new AutoPositionForearm(m_gripperArm, AutoPositionForearm.ArmPosition.PLACE_ELEM_MID);
-    private final AutoPositionForearm m_positionArmPlaceElemTop = new AutoPositionForearm(m_gripperArm, AutoPositionForearm.ArmPosition.PLACE_ELEM_TOP);
+    private final AutoPositionArm m_positionArmHome = new AutoPositionArm(m_gripperArm, AutoPositionArm.ArmPosition.HOME);
+    private final AutoPositionArm m_positionArmPickElemFloor = new AutoPositionArm(m_gripperArm, AutoPositionArm.ArmPosition.PICK_ELEM_FLOOR);
+    private final AutoPositionArm m_positionArmPickElemStation = new AutoPositionArm(m_gripperArm, AutoPositionArm.ArmPosition.PICK_ELEM_STATION);
+    private final AutoPositionArm m_positionArmPlaceElemMid = new AutoPositionArm(m_gripperArm, AutoPositionArm.ArmPosition.PLACE_ELEM_MID);
+    private final AutoPositionArm m_positionArmPlaceElemTop = new AutoPositionArm(m_gripperArm, AutoPositionArm.ArmPosition.PLACE_ELEM_TOP);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -82,7 +84,7 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         m_driveTrain.setDefaultCommand(m_driveArcade);
-        m_gripperArm.setDefaultCommand(m_moveForearm);
+        m_gripperArm.setDefaultCommand(m_autoPositionForearm);
     }
 
     private void configureAutonomousCommands() {

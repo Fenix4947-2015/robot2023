@@ -103,6 +103,10 @@ public class GripperArm extends SubsystemBase {
         }
     }
 
+    public boolean isAutoEnabled() {
+        return getEncoderDistance() > currentVerticalArmPosition.autoAngleEncoderValue;
+    }
+
     public void stopForearm() {
         m_foreArmLeader.set(0.0);
     }
@@ -196,7 +200,7 @@ public class GripperArm extends SubsystemBase {
     }
 
     public enum VerticalArmPosition {
-        REAR(0.5, 22.5) {
+        REAR(0.5, 5.0, 22.5) {
             @Override
             public VerticalArmPosition moveForward() {
                 return CENTRE;
@@ -207,7 +211,7 @@ public class GripperArm extends SubsystemBase {
                 return REAR;
             }
         },
-        CENTRE(0.5, 26) {
+        CENTRE(0.5, 5.0, 26) {
             @Override
             public VerticalArmPosition moveForward() {
                 return FORWARD;
@@ -218,7 +222,7 @@ public class GripperArm extends SubsystemBase {
                 return REAR;
             }
         },
-        FORWARD(3.0, 31.5) {
+        FORWARD(3.0, 15.0, 31.5) {
             @Override
             public VerticalArmPosition moveForward() {
                 return FORWARD;
@@ -231,10 +235,12 @@ public class GripperArm extends SubsystemBase {
         };
 
         public final double maxAngleEncoderValue;
+        public final double autoAngleEncoderValue;
         public final double minAngleEncoderValue;
 
-        VerticalArmPosition(double minAngleEncoderValue, double maxAngleEncoderValue) {
+        VerticalArmPosition(double minAngleEncoderValue, double autoAngleEncoderValue, double maxAngleEncoderValue) {
             this.minAngleEncoderValue = minAngleEncoderValue;
+            this.autoAngleEncoderValue = autoAngleEncoderValue;
             this.maxAngleEncoderValue = maxAngleEncoderValue;
         }
 

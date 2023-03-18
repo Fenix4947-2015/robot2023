@@ -6,7 +6,6 @@ package frc.robot.commands.gripperarm;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GripperArm;
@@ -15,7 +14,7 @@ import frc.robot.subsystems.GripperArm.VerticalArmPosition;
 /**
  * An example command that uses an example subsystem.
  */
-public class AutoPositionForearm extends CommandBase {
+public class AutoPositionArm extends CommandBase {
     private static final double DEADBAND = 0.2;
     private static final double KP = 0.5;
     private static final double KI = 0.0;
@@ -23,19 +22,17 @@ public class AutoPositionForearm extends CommandBase {
     private static final double CLAMP_PID_SPEED = 0.8;
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final GripperArm m_gripperArm;
-    private final XboxController m_controller;
     private final PIDController pid = new PIDController(KP, KI, KD);
-    private double _targetPosition;
+    private final ArmPosition desiredPosition;
 
     private boolean completedHoming = false;
 
-    public AutoPositionForearm(GripperArm gripperArm, XboxController xboxController) {
+    public AutoPositionArm(GripperArm gripperArm, ArmPosition desiredPosition) {
         m_gripperArm = gripperArm;
-        m_controller = xboxController;
+        this.desiredPosition = desiredPosition;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(gripperArm);
         pid.setTolerance(0.5);
-        _targetPosition = m_gripperArm.getEncoderDistance();
     }
 
     // Called when the command is initially scheduled.
@@ -43,26 +40,31 @@ public class AutoPositionForearm extends CommandBase {
     public void initialize() {
     }
 
-    private static double applyDeadband(double val) {
-        return Math.abs(val) < DEADBAND ? 0.0 : val;
-    }
-
     @Override
     public void execute() {
-        double move = applyDeadband(-m_controller.getRightY());
-        double currentPosition = m_gripperArm.getEncoderDistance();
-        double speed = move;
-        if (m_gripperArm.isAutoEnabled()) {
-            _targetPosition = move == 0 ? _targetPosition : currentPosition + move;
-            speed = calculatePidMovement(_targetPosition);
+        double speed = 0.0;
+        boolean vertArmInDesiredPos = isVerticalArmInDesiredPosition();
+        if (!vertArmInDesiredPos) {
+            completedHoming = false;
+            speed = -1.0;
+            if (m_gripperArm.getEncoderDistance() < desiredPosition.verticalArmPosition.minAngleEncoderValue) {
+                m_gripperArm.moveVerticalArm(desiredPosition.verticalArmPosition);
+            }
+        } else {
+            completedHoming = true;
+            speed = calculatePidMovement(desiredPosition.encoderAngle);
         }
 
-        SmartDashboard.putNumber("AutoPosForearm/speed", currentPosition);
-        SmartDashboard.putNumber("AutoPosForearm/speed", _targetPosition);
-        SmartDashboard.putNumber("AutoPosForearm/setpoint", pid.getSetpoint());
-        SmartDashboard.putBoolean("AutoPosForearm/isAtSetpoint", pid.atSetpoint());
+        SmartDashboard.putNumber("AutoPosArm/speed", speed);
+        SmartDashboard.putNumber("AutoPosArm/setpoint", pid.getSetpoint());
+        SmartDashboard.putBoolean("AutoPosArm/isAtSetpoint", pid.atSetpoint());
+        SmartDashboard.putBoolean("AutoPosArm/vertArmInPos", vertArmInDesiredPos);
 
         m_gripperArm.moveForearm(speed);
+    }
+
+    private boolean isVerticalArmInDesiredPosition() {
+        return m_gripperArm.getCurrentVerticalArmPosition() == desiredPosition.verticalArmPosition;
     }
 
     private double calculatePidMovement(double desiredEncoderAngle) {
@@ -80,6 +82,21 @@ public class AutoPositionForearm extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return completedHoming && pid.atSetpoint();
+        return completedHoming && pid.atSetpoint() && isVerticalArmInDesiredPosition();
+    }
+
+    public enum ArmPosition {
+        HOME(0.0, VerticalArmPosition.REAR),
+        PICK_ELEM_FLOOR(3.25, VerticalArmPosition.FORWARD),
+        PICK_ELEM_STATION(15.0, VerticalArmPosition.REAR),
+        PLACE_ELEM_TOP(31.5, VerticalArmPosition.FORWARD),
+        PLACE_ELEM_MID(18.5, VerticalArmPosition.CENTRE);
+
+        private final double encoderAngle;
+        private final VerticalArmPosition verticalArmPosition;
+        ArmPosition(double encoderAngle, VerticalArmPosition verticalArmPosition) {
+            this.encoderAngle = encoderAngle;
+            this.verticalArmPosition = verticalArmPosition;
+        }
     }
 }
