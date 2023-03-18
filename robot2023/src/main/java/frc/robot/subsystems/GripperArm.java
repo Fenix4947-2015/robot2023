@@ -15,19 +15,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-import static edu.wpi.first.wpilibj.PneumaticsModuleType.CTREPCM;
-
 public class GripperArm extends SubsystemBase {
     private final Constants.HardwareConstants hardwareConstants = Constants.currentHardwareConstants();
 
     private final CANSparkMax m_foreArmLeader = new CANSparkMax(hardwareConstants.getForeArmLeaderId(), MotorType.kBrushed);
     private final CANSparkMax m_foreArmFollower = new CANSparkMax(hardwareConstants.getForeArmFollowerId(), MotorType.kBrushed);
 
-    private final Solenoid m_lockElbow = new Solenoid(CTREPCM, hardwareConstants.getLockElbowSolenoidChannel());
-    private final Solenoid m_verticalArmStage1 = new Solenoid(CTREPCM, hardwareConstants.getVerticalArmStage1SolenoidChannel());
-    private final Solenoid m_verticalArmStage2 = new Solenoid(CTREPCM, hardwareConstants.getVerticalArmStage2SolenoidChannel());
-    private final Solenoid m_kickstand = new Solenoid(CTREPCM, hardwareConstants.getKickstandSolenoidChannel());
-    private final Solenoid m_gripper = new Solenoid(CTREPCM, hardwareConstants.getGripperSolenoidChannel());
+    private final Solenoid m_lockElbow = new Solenoid(hardwareConstants.getPneumaticsModuleType(), hardwareConstants.getLockElbowSolenoidChannel());
+    private final Solenoid m_verticalArmStage1 = new Solenoid(hardwareConstants.getPneumaticsModuleType(), hardwareConstants.getVerticalArmStage1SolenoidChannel());
+    private final Solenoid m_verticalArmStage2 = new Solenoid(hardwareConstants.getPneumaticsModuleType(), hardwareConstants.getVerticalArmStage2SolenoidChannel());
+    private final Solenoid m_kickstand = new Solenoid(hardwareConstants.getPneumaticsModuleType(), hardwareConstants.getKickstandSolenoidChannel());
+    private final Solenoid m_gripper = new Solenoid(hardwareConstants.getPneumaticsModuleType(), hardwareConstants.getGripperSolenoidChannel());
 
     private final Encoder m_encoder = new Encoder(hardwareConstants.getArmEncoderChannel1(), hardwareConstants.getArmEncoderChannel2());
 

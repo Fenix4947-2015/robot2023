@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -17,42 +18,34 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     private static final HardwareConstants CLONE_HARDWARE_CONSTANTS = new CloneHardwareConstants();
+    private static final HardwareConstants ROBOT_HARDWARE_CONSTANTS = new RobotHardwareConstants();
 
     public static HardwareConstants currentHardwareConstants() {
-        return CLONE_HARDWARE_CONSTANTS;
+        return ROBOT_HARDWARE_CONSTANTS;
     }
 
     public interface HardwareConstants {
         int getLeftLeaderDeviceId();
-
         int getLeftFollowerDeviceId();
-
         int getRightLeaderDeviceId();
-
         int getRightFollowerDeviceId();
-
-        int getShifterSolenoidChannelId();
-
         int getForeArmLeaderId();
-
         int getForeArmFollowerId();
 
+        int getShifterSolenoidChannelId();
         int getLockElbowSolenoidChannel();
-
         int getVerticalArmStage1SolenoidChannel();
-
         int getVerticalArmStage2SolenoidChannel();
-
         int getKickstandSolenoidChannel();
-
         int getGripperSolenoidChannel();
 
         int getArmEncoderChannel1();
-
         int getArmEncoderChannel2();
         int getArmLimitSwitchDigitalInput();
 
         int getSpareTalonDeviceNumber();
+
+        PneumaticsModuleType getPneumaticsModuleType();
     }
 
     public static class OperatorConstants {
@@ -143,6 +136,100 @@ public final class Constants {
         @Override
         public int getArmLimitSwitchDigitalInput() {
             return 7;
+        }
+
+        @Override 
+        public PneumaticsModuleType getPneumaticsModuleType() {
+            return PneumaticsModuleType.CTREPCM;
+        }
+
+    }
+
+    public static class RobotHardwareConstants implements HardwareConstants {
+
+        @Override
+        public int getLeftLeaderDeviceId() {
+            return 23;
+        }
+
+        @Override
+        public int getLeftFollowerDeviceId() {
+            return 24;
+        }
+
+        @Override
+        public int getRightLeaderDeviceId() {
+            return 27;
+        }
+
+        @Override
+        public int getRightFollowerDeviceId() {
+            return 28;
+        }
+
+        @Override
+        public int getShifterSolenoidChannelId() {
+            return 3;
+        }
+
+        @Override
+        public int getForeArmLeaderId() {
+            return 21;
+        }
+
+        @Override
+        public int getForeArmFollowerId() {
+            return 22;
+        }
+
+        @Override
+        public int getLockElbowSolenoidChannel() {
+            return 0;
+        }
+
+        @Override
+        public int getVerticalArmStage1SolenoidChannel() {
+            return 1;
+        }
+
+        @Override
+        public int getVerticalArmStage2SolenoidChannel() {
+            return 2;
+        }
+
+        @Override
+        public int getKickstandSolenoidChannel() {
+            return 7;
+        }
+
+        @Override
+        public int getGripperSolenoidChannel() {
+            return 6;
+        }
+
+        @Override
+        public int getSpareTalonDeviceNumber() {
+            return 19;
+        }
+
+        @Override
+        public int getArmEncoderChannel1() {
+            return 0;
+        }
+
+        @Override
+        public int getArmEncoderChannel2() {
+            return 1;
+        }
+
+        @Override
+        public int getArmLimitSwitchDigitalInput() {
+            return 7;
+        }
+
+        @Override 
+        public PneumaticsModuleType getPneumaticsModuleType() {
+            return PneumaticsModuleType.REVPH;
         }
 
     }

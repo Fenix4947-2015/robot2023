@@ -29,7 +29,7 @@ public class DriveTrain extends SubsystemBase {
     private final CANSparkMax m_rightLeader = new CANSparkMax(hardwareConstants.getRightLeaderDeviceId(), MotorType.kBrushless);
     private final CANSparkMax m_rightFollower = new CANSparkMax(hardwareConstants.getRightFollowerDeviceId(), MotorType.kBrushless);
 
-    private final Solenoid m_shifter = new Solenoid(CTREPCM, hardwareConstants.getShifterSolenoidChannelId());
+    private final Solenoid m_shifter = new Solenoid(hardwareConstants.getPneumaticsModuleType(), hardwareConstants.getShifterSolenoidChannelId());
 
     private final WPI_TalonSRX m_spareTalon = new WPI_TalonSRX(hardwareConstants.getSpareTalonDeviceNumber());
     private final WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(m_spareTalon);
