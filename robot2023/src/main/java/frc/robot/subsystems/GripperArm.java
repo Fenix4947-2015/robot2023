@@ -50,7 +50,7 @@ public class GripperArm extends SubsystemBase {
         m_encoder.reset();
     }
 
-    public void initTeleop() {
+    public void initialize() {
         resetEncoder();
         positionVerticalArm();
     }
@@ -121,6 +121,10 @@ public class GripperArm extends SubsystemBase {
 
     public void lockElbow() {
         m_lockElbow.set(false);
+    }
+
+    public void toggleElbow() {
+        m_lockElbow.toggle();
     }
 
     public void unlockElbow() {
@@ -200,7 +204,7 @@ public class GripperArm extends SubsystemBase {
     }
 
     public enum VerticalArmPosition {
-        REAR(0.5, 5.0, 22.5) {
+        REAR(5.0, 5.0, 22.5, 0.0) {
             @Override
             public VerticalArmPosition moveForward() {
                 return CENTRE;
@@ -211,7 +215,7 @@ public class GripperArm extends SubsystemBase {
                 return REAR;
             }
         },
-        CENTRE(0.5, 5.0, 26) {
+        CENTRE(5.0, 5.0, 26, 1.0) {
             @Override
             public VerticalArmPosition moveForward() {
                 return FORWARD;
@@ -222,7 +226,7 @@ public class GripperArm extends SubsystemBase {
                 return REAR;
             }
         },
-        FORWARD(3.0, 15.0, 31.5) {
+        FORWARD(6.0, 15.0, 32.5, 3.0) {
             @Override
             public VerticalArmPosition moveForward() {
                 return FORWARD;
@@ -236,12 +240,14 @@ public class GripperArm extends SubsystemBase {
 
         public final double maxAngleEncoderValue;
         public final double autoAngleEncoderValue;
-        public final double minAngleEncoderValue;
+        public final double homedAngleEncoderValue;
+        public final double stabilizationDelay;
 
-        VerticalArmPosition(double minAngleEncoderValue, double autoAngleEncoderValue, double maxAngleEncoderValue) {
-            this.minAngleEncoderValue = minAngleEncoderValue;
+        VerticalArmPosition(double homedAngleEncoderValue, double autoAngleEncoderValue, double maxAngleEncoderValue, double stabilizationDelay) {
+            this.homedAngleEncoderValue = homedAngleEncoderValue;
             this.autoAngleEncoderValue = autoAngleEncoderValue;
             this.maxAngleEncoderValue = maxAngleEncoderValue;
+            this.stabilizationDelay = stabilizationDelay;
         }
 
         public abstract VerticalArmPosition moveForward();

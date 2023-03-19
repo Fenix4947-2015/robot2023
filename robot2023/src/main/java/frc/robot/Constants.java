@@ -21,7 +21,7 @@ public final class Constants {
     private static final HardwareConstants ROBOT_HARDWARE_CONSTANTS = new RobotHardwareConstants();
 
     public static HardwareConstants currentHardwareConstants() {
-        return CLONE_HARDWARE_CONSTANTS;
+        return ROBOT_HARDWARE_CONSTANTS;
     }
 
     public interface HardwareConstants {
@@ -46,6 +46,8 @@ public final class Constants {
         int getSpareTalonDeviceNumber();
 
         PneumaticsModuleType getPneumaticsModuleType();
+
+        double getDriveSlewRate();
     }
 
     public static class OperatorConstants {
@@ -143,6 +145,11 @@ public final class Constants {
             return PneumaticsModuleType.CTREPCM;
         }
 
+        @Override
+        public double getDriveSlewRate() {
+            return 2.5;
+        }
+
     }
 
     public static class RobotHardwareConstants implements HardwareConstants {
@@ -230,6 +237,11 @@ public final class Constants {
         @Override 
         public PneumaticsModuleType getPneumaticsModuleType() {
             return PneumaticsModuleType.REVPH;
+        }
+
+        @Override
+        public double getDriveSlewRate() {
+            return 1.5;
         }
 
     }

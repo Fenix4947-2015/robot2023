@@ -27,14 +27,13 @@ public class AutoPositionForearm extends CommandBase {
     private final PIDController pid = new PIDController(KP, KI, KD);
     private double _targetPosition;
 
-    private boolean completedHoming = false;
 
     public AutoPositionForearm(GripperArm gripperArm, XboxController xboxController) {
         m_gripperArm = gripperArm;
         m_controller = xboxController;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(gripperArm);
-        pid.setTolerance(0.5);
+        pid.setTolerance(1.0);
         _targetPosition = m_gripperArm.getEncoderDistance();
     }
 
@@ -57,8 +56,9 @@ public class AutoPositionForearm extends CommandBase {
             speed = calculatePidMovement(_targetPosition);
         }
 
-        SmartDashboard.putNumber("AutoPosForearm/speed", currentPosition);
-        SmartDashboard.putNumber("AutoPosForearm/speed", _targetPosition);
+        SmartDashboard.putNumber("AutoPosForearm/currentPosition", currentPosition);
+        SmartDashboard.putNumber("AutoPosForearm/targetPosition", _targetPosition);
+        SmartDashboard.putNumber("AutoPosForearm/speed", speed);
         SmartDashboard.putNumber("AutoPosForearm/setpoint", pid.getSetpoint());
         SmartDashboard.putBoolean("AutoPosForearm/isAtSetpoint", pid.atSetpoint());
 
@@ -80,6 +80,6 @@ public class AutoPositionForearm extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return completedHoming && pid.atSetpoint();
+        return false;
     }
 }

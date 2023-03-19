@@ -6,6 +6,7 @@ package frc.robot.commands.gripperarm;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GripperArm;
@@ -24,8 +25,11 @@ public class AutoPositionArm extends CommandBase {
     private final GripperArm m_gripperArm;
     private final PIDController pid = new PIDController(KP, KI, KD);
     private final ArmPosition desiredPosition;
+    private final Timer m_timer = new Timer();
+    private boolean waitForStabilization = false;
 
     private boolean completedHoming = false;
+    private boolean inFinalMovement = false;
 
     public AutoPositionArm(GripperArm gripperArm, ArmPosition desiredPosition) {
         m_gripperArm = gripperArm;
@@ -46,13 +50,27 @@ public class AutoPositionArm extends CommandBase {
         boolean vertArmInDesiredPos = isVerticalArmInDesiredPosition();
         if (!vertArmInDesiredPos) {
             completedHoming = false;
-            speed = -1.0;
-            if (m_gripperArm.getEncoderDistance() < desiredPosition.verticalArmPosition.minAngleEncoderValue) {
+            //if (m_gripperArm.getEncoderDistance() > m_gripperArm.getCurrentVerticalArmPosition().homedAngleEncoderValue) {
+            //    speed = -1.0;
+            speed = calculatePidMovement(m_gripperArm.getCurrentVerticalArmPosition().homedAngleEncoderValue);
+
+            if (pid.atSetpoint()) {
+                completedHoming = true;
                 m_gripperArm.moveVerticalArm(desiredPosition.verticalArmPosition);
+                waitForStabilization = true;
+                m_timer.reset();
+                m_timer.start();
             }
         } else {
-            completedHoming = true;
-            speed = calculatePidMovement(desiredPosition.encoderAngle);
+            if (waitForStabilization && m_timer.hasElapsed(desiredPosition.verticalArmPosition.stabilizationDelay)) {
+                m_timer.stop();
+                m_timer.reset();
+                waitForStabilization = false;
+            }
+            if (!waitForStabilization) {
+                inFinalMovement = true;
+                speed = calculatePidMovement(desiredPosition.encoderAngle);
+            }
         }
 
         SmartDashboard.putNumber("AutoPosArm/speed", speed);
@@ -82,18 +100,19 @@ public class AutoPositionArm extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return completedHoming && pid.atSetpoint() && isVerticalArmInDesiredPosition();
+        return inFinalMovement && pid.atSetpoint() && isVerticalArmInDesiredPosition();
     }
 
     public enum ArmPosition {
         HOME(0.0, VerticalArmPosition.REAR),
-        PICK_ELEM_FLOOR(3.25, VerticalArmPosition.FORWARD),
+        PICK_ELEM_FLOOR(5.0, VerticalArmPosition.FORWARD),
         PICK_ELEM_STATION(15.0, VerticalArmPosition.REAR),
         PLACE_ELEM_TOP(31.5, VerticalArmPosition.FORWARD),
         PLACE_ELEM_MID(18.5, VerticalArmPosition.CENTRE);
 
         private final double encoderAngle;
         private final VerticalArmPosition verticalArmPosition;
+
         ArmPosition(double encoderAngle, VerticalArmPosition verticalArmPosition) {
             this.encoderAngle = encoderAngle;
             this.verticalArmPosition = verticalArmPosition;

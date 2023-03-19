@@ -5,6 +5,7 @@
 package frc.robot.commands.gripperarm;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GripperArm;
 
@@ -13,6 +14,8 @@ import frc.robot.subsystems.GripperArm;
  */
 public class MoveForearm extends CommandBase {
     private static final double DEADBAND = 0.2;
+    private static final double KEEP_STATIONARY_THRESHOLD_ANGLE = 24.0;
+    private static final double KEEP_STATIONARY_POWER = 0.1;
 
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final GripperArm m_gripperArm;
@@ -43,6 +46,13 @@ public class MoveForearm extends CommandBase {
     @Override
     public void execute() {
         double speed = applyDeadband(-m_controller.getRightY());
+
+        if (speed == 0.0 && m_gripperArm.getCurrentVerticalArmPosition() == GripperArm.VerticalArmPosition.FORWARD
+                && m_gripperArm.getEncoderDistance() >= KEEP_STATIONARY_THRESHOLD_ANGLE) {
+            speed = KEEP_STATIONARY_POWER;
+        }
+
+        SmartDashboard.putNumber("MoveForearm/speed", speed);
         m_gripperArm.moveForearm(speed);
     }
 
