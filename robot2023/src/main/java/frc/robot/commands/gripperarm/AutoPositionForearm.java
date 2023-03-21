@@ -53,7 +53,9 @@ public class AutoPositionForearm extends CommandBase {
         double speed = move;
         if (m_gripperArm.isAutoEnabled()) {
             _targetPosition = move == 0 ? _targetPosition : currentPosition + move;
-            speed = calculatePidMovement(_targetPosition);
+            if (_targetPosition >= currentPosition){
+                speed = calculatePidMovement(_targetPosition);
+            }
         }
 
         SmartDashboard.putNumber("AutoPosForearm/currentPosition", currentPosition);
