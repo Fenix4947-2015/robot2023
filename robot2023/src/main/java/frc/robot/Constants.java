@@ -21,7 +21,7 @@ public final class Constants {
     private static final HardwareConstants ROBOT_HARDWARE_CONSTANTS = new RobotHardwareConstants();
 
     public static HardwareConstants currentHardwareConstants() {
-        return CLONE_HARDWARE_CONSTANTS;
+        return ROBOT_HARDWARE_CONSTANTS;
     }
 
     public interface HardwareConstants {

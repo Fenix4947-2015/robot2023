@@ -54,8 +54,8 @@ public class RobotContainer {
     private final CommandBase m_shiftLow = new InstantCommand(m_driveTrain::shiftLow);
     private final CommandBase m_stopAll = new StopAll(m_driveTrain);
     private final StopArm m_stopArm = new StopArm(m_gripperArm);
-    private final MoveForearm m_moveForearm = new MoveForearm(m_gripperArm, m_driverController.getHID());
-    private final AutoPositionForearm m_autoPositionForearm = new AutoPositionForearm(m_gripperArm, m_driverController.getHID());
+    //private final MoveForearm m_moveForearm = new MoveForearm(m_gripperArm, m_driverController.getHID());
+    private final AutoPositionForearm m_autoPositionForearm = new AutoPositionForearm(m_gripperArm, m_helperController.getHID());
     private final HomeForearm m_homeForearm = new HomeForearm(m_gripperArm);
 
     private final CommandBase m_lockElbow = new InstantCommand(m_gripperArm::lockElbow);
@@ -156,12 +156,12 @@ public class RobotContainer {
 
         m_driverController.rightBumper().onTrue(m_shiftHigh);
         m_driverController.leftBumper().onTrue(m_shiftLow);
-        m_driverController.back().onTrue(m_toggleElbow);
         m_driverController.b().whileTrue(m_instantCommands.closeGripper());
         m_driverController.y().whileTrue(m_instantCommands.openGripper());
         m_driverController.a().whileTrue(_autoAimPick);
-        m_driverController.povLeft().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmBackward));
-        m_driverController.povRight().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmForward));
+        //m_driverController.back().onTrue(m_toggleElbow);
+        //m_driverController.povLeft().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmBackward));
+        //m_driverController.povRight().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmForward));
         
 
         m_driverController.povUp().onTrue(m_instantCommands.extendKickstand());
