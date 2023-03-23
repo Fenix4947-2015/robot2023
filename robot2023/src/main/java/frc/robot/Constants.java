@@ -48,6 +48,7 @@ public final class Constants {
         PneumaticsModuleType getPneumaticsModuleType();
 
         double getDriveSlewRate();
+        double getReverseEncoder();
     }
 
     public static class OperatorConstants {
@@ -150,6 +151,11 @@ public final class Constants {
             return 2.5;
         }
 
+        @Override
+        public double getReverseEncoder() {
+            return 1.0;
+        }
+
     }
 
     public static class RobotHardwareConstants implements HardwareConstants {
@@ -231,7 +237,7 @@ public final class Constants {
 
         @Override
         public int getArmLimitSwitchDigitalInput() {
-            return 7;
+            return 9;
         }
 
         @Override 
@@ -244,13 +250,19 @@ public final class Constants {
             return 1.5;
         }
 
+        @Override
+        public double getReverseEncoder() {
+            return -1.0;
+        }
+
     }
 
     public static class DriveTrainConstants {
 
-        public static final double kTurnP = 10.0;
-        public static final double kTurnI = 8.0;
+        public static final double kTurnP = 0.025;
+        public static final double kTurnI = 0.0;
         public static final double kTurnD = 0;
+        public static final double kTurnFF = 0.2;
         public static final double kTurnToleranceDegrees = 5;
         public static final double kTurnRateToleranceDegreesPerSec = 10; // degrees per second
         // Constants obtained from SysId

@@ -57,13 +57,13 @@ public class HomeForearm extends CommandBase {
             state = State.UNLOCKED;
             timer.start();
         } else if (state == State.UNLOCKED) {
-            if (timer.get() > 3.0) {
+            if (timer.get() > 2.0) {
                 m_gripperArm.lockElbow();
                 state = State.LOCKING;
                 timer.reset();
             }
         } else if (state == State.LOCKING) { 
-            if (timer.get() > 1.0) {
+            if (timer.get() > 0.01) {
                 state = State.LOCKED;
                 timer.reset();
                 timer.stop();
@@ -71,9 +71,9 @@ public class HomeForearm extends CommandBase {
         }
         else if (state == State.LOCKED) {
             if (m_gripperArm.isForearmAtHome() && m_gripperArm.isForearmGoingUp()) {
-                m_gripperArm.moveForearm(0.25);
+                m_gripperArm.moveForearm(1.0);
             } else if (!m_gripperArm.isForearmAtHome()) {
-                m_gripperArm.moveForearm(-0.1);
+                m_gripperArm.moveForearm(-0.5);
             } else {
                 state = State.HOMED;
             }

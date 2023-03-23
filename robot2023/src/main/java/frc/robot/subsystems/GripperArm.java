@@ -72,7 +72,7 @@ public class GripperArm extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        SmartDashboard.putNumber("Arm/Encoder", m_encoder.getDistance());
+        SmartDashboard.putNumber("Arm/Encoder", getEncoderDistance());
         SmartDashboard.putString("Arm/VerticalPos", currentVerticalArmPosition.name());
         SmartDashboard.putBoolean("Arm/LimitSwitch", isForearmAtHome());
         SmartDashboard.putNumber("Arm/ForearmSpeed", getForearmSpeed());
@@ -88,7 +88,7 @@ public class GripperArm extends SubsystemBase {
     }
 
     public double getEncoderDistance() {
-        return m_encoder.getDistance();
+        return m_encoder.getDistance() * hardwareConstants.getReverseEncoder();
     }
 
     public VerticalArmPosition getCurrentVerticalArmPosition() {
@@ -96,7 +96,7 @@ public class GripperArm extends SubsystemBase {
     }
 
     public void moveForearm(double speed) {
-        if (speed > 0.0 && m_encoder.getDistance() >= currentVerticalArmPosition.maxAngleEncoderValue) {
+        if (speed > 0.0 && getEncoderDistance() >= currentVerticalArmPosition.maxAngleEncoderValue) {
             m_foreArmLeader.set(0.0);
         } else {
             m_foreArmLeader.set(speed);
@@ -200,7 +200,7 @@ public class GripperArm extends SubsystemBase {
     }
 
     public boolean isForearmAtHome() {
-        return m_limitSwitch.get();
+        return !m_limitSwitch.get();
     }
 
     public enum VerticalArmPosition {
@@ -215,7 +215,7 @@ public class GripperArm extends SubsystemBase {
                 return REAR;
             }
         },
-        CENTRE(5.0, 5.0, 26, 1.0) {
+        CENTRE(5.0, 5.0, 26, 0.0) {
             @Override
             public VerticalArmPosition moveForward() {
                 return FORWARD;
@@ -226,7 +226,7 @@ public class GripperArm extends SubsystemBase {
                 return REAR;
             }
         },
-        FORWARD(6.0, 15.0, 32.5, 3.0) {
+        FORWARD(6.0, 15.0, 32.5, 0.0) {
             @Override
             public VerticalArmPosition moveForward() {
                 return FORWARD;

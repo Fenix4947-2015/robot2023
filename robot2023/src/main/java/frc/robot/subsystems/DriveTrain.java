@@ -99,7 +99,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public double getHeading() {
-        return m_gyro.getAngle();
+        return -1.0 * m_gyro.getAngle();
     }
 
     public double getPosition() {

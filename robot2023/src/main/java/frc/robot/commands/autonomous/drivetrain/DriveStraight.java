@@ -22,8 +22,8 @@ public class DriveStraight extends CommandBase {
     private double lastPos;
 
     public DriveStraight(double targetPositionMeters, DriveTrain driveTrain) {
-        m_targetPositionMeters = targetPositionMeters;
         m_driveTrain = driveTrain;
+        m_targetPositionMeters = targetPositionMeters ;
 
         SmartDashboard.putNumber("DT/PID_kp", 1.5);
         SmartDashboard.putNumber("DT/PID_ki", 0.5);
@@ -37,6 +37,11 @@ public class DriveStraight extends CommandBase {
         addRequirements(driveTrain);
     }
 
+    private double getCurrentPosition() {
+        final double posFudgeFactor = 0.6;
+        return m_driveTrain.getPosition() / posFudgeFactor;
+    }
+
     @Override
     public void initialize() {
         m_driveTrain.reset();
@@ -47,8 +52,7 @@ public class DriveStraight extends CommandBase {
     public void execute() {
         final Instant now = Instant.now();
         final double dtSeconds = ((double) Duration.between(lastTime, now).toMillis()) / 1000.0;
-        final double posFudgeFactor = 0.6;
-        final double currPos = m_driveTrain.getPosition() / posFudgeFactor;
+        final double currPos = getCurrentPosition();
         final double velocity = (currPos - lastPos) / dtSeconds;
         lastPos = currPos;
 

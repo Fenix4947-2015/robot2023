@@ -24,7 +24,6 @@ public class AutoPositionForearm extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final GripperArm m_gripperArm;
     private final XboxController m_controller;
-    private final PIDController pid = new PIDController(KP, KI, KD);
     private double _targetPosition;
 
 
@@ -33,7 +32,6 @@ public class AutoPositionForearm extends CommandBase {
         m_controller = xboxController;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(gripperArm);
-        pid.setTolerance(1.0);
         _targetPosition = m_gripperArm.getEncoderDistance();
     }
 
@@ -61,15 +59,11 @@ public class AutoPositionForearm extends CommandBase {
         SmartDashboard.putNumber("AutoPosForearm/currentPosition", currentPosition);
         SmartDashboard.putNumber("AutoPosForearm/targetPosition", _targetPosition);
         SmartDashboard.putNumber("AutoPosForearm/speed", speed);
-        SmartDashboard.putNumber("AutoPosForearm/setpoint", pid.getSetpoint());
-        SmartDashboard.putBoolean("AutoPosForearm/isAtSetpoint", pid.atSetpoint());
-
         m_gripperArm.moveForearm(speed);
     }
 
     private double calculatePidMovement(double desiredEncoderAngle) {
-        pid.setSetpoint(desiredEncoderAngle);
-        double output = pid.calculate(m_gripperArm.getEncoderDistance(), desiredEncoderAngle);
+        double output = (desiredEncoderAngle - m_gripperArm.getEncoderDistance()) * KP;
         double speed = MathUtil.clamp(output, -CLAMP_PID_SPEED, CLAMP_PID_SPEED);
         return speed;
     }

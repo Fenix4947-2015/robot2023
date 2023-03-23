@@ -32,7 +32,9 @@ public class TurnAngle extends CommandBase {
     @Override
     public void execute() {
         double speed = 0;
-        double rotation = MathUtil.clamp(m_pidController.calculate(m_driveTrain.getHeading(), m_targetAngleDegrees) * 1.0, -0.7, 0.7);
+        double turnCommandFromPID = m_pidController.calculate(m_driveTrain.getHeading(), m_targetAngleDegrees);
+        turnCommandFromPID = turnCommandFromPID > 0 ? turnCommandFromPID + DriveTrainConstants.kTurnFF : turnCommandFromPID - DriveTrainConstants.kTurnFF;
+        double rotation = MathUtil.clamp(turnCommandFromPID, -0.8, 0.8);
 
         m_driveTrain.arcadeDrive(speed, rotation);
     }
