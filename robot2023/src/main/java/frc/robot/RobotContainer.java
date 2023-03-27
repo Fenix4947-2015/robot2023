@@ -45,21 +45,15 @@ public class RobotContainer {
     // Commands.
     private final AutoAim _autoAimPick = new AutoAim(AutoAim.AUTOAIM_PICK_PIPELINE, m_driveTrain, m_limelight,
     m_smartDashboardSettings);
-    private final AutoAim _autoAimPlace = new AutoAim(AutoAim.AUTOAIM_PLACE_PIPELINE, m_driveTrain, m_limelight,
-    m_smartDashboardSettings);
 
 
     private final DriveArcade m_driveArcade = new DriveArcade(m_driverController.getHID(), m_driveTrain);
     private final CommandBase m_shiftHigh = new InstantCommand(m_driveTrain::shiftHigh);
     private final CommandBase m_shiftLow = new InstantCommand(m_driveTrain::shiftLow);
     private final CommandBase m_stopAll = new StopAll(m_driveTrain);
-    private final StopArm m_stopArm = new StopArm(m_gripperArm);
     //private final MoveForearm m_moveForearm = new MoveForearm(m_gripperArm, m_driverController.getHID());
     private final AutoPositionForearm m_autoPositionForearm = new AutoPositionForearm(m_gripperArm, m_helperController.getHID());
-    private final HomeForearm m_homeForearm = new HomeForearm(m_gripperArm);
 
-    private final CommandBase m_lockElbow = new InstantCommand(m_gripperArm::lockElbow);
-    private final CommandBase m_unlockElbow = new InstantCommand(m_gripperArm::unlockElbow);
     private final CommandBase m_toggleElbow = new InstantCommand(m_gripperArm::toggleElbow);
 
     private final InstantCommands m_instantCommands = new InstantCommands(m_gripperArm);

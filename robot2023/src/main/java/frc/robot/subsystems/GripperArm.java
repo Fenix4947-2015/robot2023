@@ -31,8 +31,6 @@ public class GripperArm extends SubsystemBase {
 
     private final DigitalInput m_limitSwitch = new DigitalInput(hardwareConstants.getArmLimitSwitchDigitalInput());
 
-    private final Double FOREARM_MAX_SPEED = 0.5;
-
     private VerticalArmPosition currentVerticalArmPosition = VerticalArmPosition.REAR;
 
     /**

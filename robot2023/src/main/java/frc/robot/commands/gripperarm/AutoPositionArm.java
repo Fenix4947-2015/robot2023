@@ -16,7 +16,6 @@ import frc.robot.subsystems.GripperArm.VerticalArmPosition;
  * An example command that uses an example subsystem.
  */
 public class AutoPositionArm extends CommandBase {
-    private static final double DEADBAND = 0.2;
     private static final double KP = 0.5;
     private static final double KI = 0.0;
     private static final double KD = 0.0;
@@ -44,7 +43,6 @@ public class AutoPositionArm extends CommandBase {
     public void initialize() {
         pid.reset();
         completedHoming = false;
-        inFinalMovement = false;
     }
 
 

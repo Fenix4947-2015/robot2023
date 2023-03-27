@@ -5,12 +5,10 @@
 package frc.robot.commands.gripperarm;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GripperArm;
-import frc.robot.subsystems.GripperArm.VerticalArmPosition;
 
 /**
  * An example command that uses an example subsystem.
@@ -18,8 +16,8 @@ import frc.robot.subsystems.GripperArm.VerticalArmPosition;
 public class AutoPositionForearm extends CommandBase {
     private static final double DEADBAND = 0.2;
     private static final double KP = 0.5;
-    private static final double KI = 0.0;
-    private static final double KD = 0.0;
+    // private static final double KI = 0.0;
+    // private static final double KD = 0.0;
     private static final double CLAMP_PID_SPEED = 0.8;
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final GripperArm m_gripperArm;

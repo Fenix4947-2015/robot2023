@@ -108,9 +108,6 @@ public class AutoAim extends CommandBase {
     _steerCommand = 0.0;
 
     // These numbers must be tuned for your Robot! Be careful!
-    final double STEER_K = 0.03; // how hard to turn toward the target
-    final double DRIVE_K = 0.35; // how hard to drive fwd toward the target
-    final double DESIRED_TARGET_AREA = 0.025; // Area of the target when the robot reaches the wall
     final double DESIRED_HEIGHT = 0.0; //8.6;
     final double DESIRED_ANGLE = 0.0;//2.6;
     final double MAX_DRIVE = 0.7; // Simple speed limit so we don't drive too fast
