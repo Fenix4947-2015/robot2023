@@ -23,6 +23,7 @@ public class AutoPositionForearm extends CommandBase {
     private final GripperArm m_gripperArm;
     private final XboxController m_controller;
     private double _targetPosition;
+    private boolean _isMoving;
 
 
     public AutoPositionForearm(GripperArm gripperArm, XboxController xboxController) {
@@ -31,25 +32,50 @@ public class AutoPositionForearm extends CommandBase {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(gripperArm);
         _targetPosition = m_gripperArm.getEncoderDistance();
+        _isMoving = false;
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        _targetPosition = getCurrentForearmPosition();
     }
 
     private static double applyDeadband(double val) {
         return Math.abs(val) < DEADBAND ? 0.0 : val;
     }
 
+    private double getCurrentForearmPosition() {
+        return m_gripperArm.getEncoderDistance();
+    }
+
+    private double clampTargetValue(double value) {
+        if (value < m_gripperArm.getCurrentVerticalArmPosition().homedAngleEncoderValue) {
+            return m_gripperArm.getCurrentVerticalArmPosition().homedAngleEncoderValue;
+        } else if (value > m_gripperArm.getCurrentVerticalArmPosition().maxAngleEncoderValue) {
+            return m_gripperArm.getCurrentVerticalArmPosition().maxAngleEncoderValue;
+        }
+        return value;
+    }
+
     @Override
     public void execute() {
         double move = applyDeadband(-m_controller.getRightY());
-        double currentPosition = m_gripperArm.getEncoderDistance();
+        double currentPosition = getCurrentForearmPosition();
         double speed = move;
         if (m_gripperArm.isAutoEnabled()) {
-            _targetPosition = move == 0 ? _targetPosition : currentPosition + move;
-            if (_targetPosition >= currentPosition){
+            if (move != 0) {
+                double moveFactor = currentPosition < (m_gripperArm.getCurrentVerticalArmPosition().maxAngleEncoderValue - 2.0) ? 2.0 : 1.0;
+                _targetPosition = currentPosition + move * moveFactor;
+                _isMoving = true;
+            } else if (_isMoving) {
+                _isMoving = false;
+                _targetPosition = currentPosition;
+            }
+
+            _targetPosition = clampTargetValue(_targetPosition);
+
+            if (_targetPosition >= currentPosition) {
                 speed = calculatePidMovement(_targetPosition);
             }
         }
