@@ -224,7 +224,7 @@ public class GripperArm extends SubsystemBase {
                 return REAR;
             }
         },
-        FORWARD(6.0, 15.0, 33.5, 0.0) {
+        FORWARD(6.0, 22.0, 33.5, 0.0) {
             @Override
             public VerticalArmPosition moveForward() {
                 return FORWARD;

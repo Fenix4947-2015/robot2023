@@ -31,8 +31,8 @@ public class DriveArcade extends CommandBase {
         double speed = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
         double rotation = -m_controller.getLeftX();
 
-        speed = m_dataExchange.getSpeedLimited() ? 0.5 * speed : speed;
-        rotation = m_dataExchange.getSpeedLimited() ? 0.5 * rotation : rotation;
+        speed = m_dataExchange.getSpeedLimited() ? 0.6 * speed : speed;
+        rotation = m_dataExchange.getSpeedLimited() ? 0.6 * rotation : rotation;
 
         double rampedSpeed = m_slewRateLimiter.calculate(speed);
 
