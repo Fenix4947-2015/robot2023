@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import javax.xml.crypto.Data;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
@@ -20,6 +22,7 @@ import frc.robot.commands.gripperarm.*;
 import frc.robot.limelight.Limelight;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.GripperArm;
+import frc.robot.exchange.SubSystemDataExchange;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -39,24 +42,24 @@ public class RobotContainer {
     // Subsystems.
     private final DriveTrain m_driveTrain = new DriveTrain();
     private final GripperArm m_gripperArm = new GripperArm();
+    private final SubSystemDataExchange dataExchange = new SubSystemDataExchange();
     private final SmartDashboardSettings m_smartDashboardSettings = new SmartDashboardSettings();
     private final Limelight m_limelight = new Limelight();
 
     // Commands.
-    private final AutoAim _autoAimPick = new AutoAim(AutoAim.AUTOAIM_PICK_PIPELINE, m_driveTrain, m_limelight,
-    m_smartDashboardSettings);
+    private final AutoAim _autoAimPick = new AutoAim(AutoAim.AUTOAIM_PICK_PIPELINE, m_driveTrain, m_limelight);
 
 
-    private final DriveArcade m_driveArcade = new DriveArcade(m_driverController.getHID(), m_driveTrain);
+    private final DriveArcade m_driveArcade = new DriveArcade(m_driverController.getHID(), m_driveTrain, dataExchange);
     private final CommandBase m_shiftHigh = new InstantCommand(m_driveTrain::shiftHigh);
     private final CommandBase m_shiftLow = new InstantCommand(m_driveTrain::shiftLow);
     private final CommandBase m_stopAll = new StopAll(m_driveTrain);
     //private final MoveForearm m_moveForearm = new MoveForearm(m_gripperArm, m_driverController.getHID());
-    private final AutoPositionForearm m_autoPositionForearm = new AutoPositionForearm(m_gripperArm, m_helperController.getHID());
+    private final AutoPositionForearm m_autoPositionForearm = new AutoPositionForearm(m_gripperArm, m_helperController.getHID(), dataExchange);
 
     private final CommandBase m_toggleElbow = new InstantCommand(m_gripperArm::toggleElbow);
 
-    private final InstantCommands m_instantCommands = new InstantCommands(m_gripperArm);
+    private final InstantCommands m_instantCommands = new InstantCommands(m_gripperArm, m_driveTrain);
 
     private final AutoPositionArm m_positionArmHome = new AutoPositionArm(m_gripperArm, AutoPositionArm.ArmPosition.HOME);
     private final AutoPositionArm m_positionArmPickElemFloor = new AutoPositionArm(m_gripperArm, AutoPositionArm.ArmPosition.PICK_ELEM_FLOOR);
@@ -67,7 +70,7 @@ public class RobotContainer {
 
     // Autonomous commands.
     private final CommandBase m_autoNone = new PrintCommand("No autonomous command selected");
-    private final CommandBase m_depositConeHigh = new DepositConeHigh(m_driveTrain, m_gripperArm);
+    private final CommandBase m_depositConeHigh = new DepositConeHigh(m_driveTrain, m_gripperArm, m_limelight);
     private final CommandBase m_depositConeMiddle = new DepositConeMiddle(m_driveTrain, m_gripperArm);
 
     private final SendableChooser<Integer> m_autonomousDelayChooser = new SendableChooser<>();
@@ -163,8 +166,8 @@ public class RobotContainer {
 
         m_helperController.povUp().onTrue(m_instantCommands.extendKickstand());
         m_helperController.povDown().onTrue(m_instantCommands.retractKickstand());
-        m_helperController.povLeft().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmBackward));
-        m_helperController.povRight().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmForward));
+        m_helperController.leftTrigger().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmBackward));
+        m_helperController.rightTrigger().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmForward));
 
         m_helperController.back().onTrue(m_toggleElbow);
         //m_helperController.start().onTrue(m_lockElbow);

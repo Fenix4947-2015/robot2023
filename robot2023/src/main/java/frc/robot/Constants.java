@@ -266,7 +266,7 @@ public final class Constants {
         public static final double kTurnI = 0.0;
         public static final double kTurnD = 0;
         public static final double kTurnFF = 0.2;
-        public static final double kTurnToleranceDegrees = 5;
+        public static final double kTurnToleranceDegrees = 3.0;
         public static final double kTurnRateToleranceDegreesPerSec = 10; // degrees per second
         // Constants obtained from SysId
         public static final double ksLow = 0.14344;

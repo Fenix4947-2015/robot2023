@@ -11,7 +11,7 @@ import frc.robot.subsystems.GripperArm;
 public class DepositConeMiddle extends SequentialCommandGroup {
 
     public DepositConeMiddle(DriveTrain driveTrain, GripperArm gripperArm) {
-        InstantCommands instantCommands = new InstantCommands(gripperArm);
+        InstantCommands instantCommands = new InstantCommands(gripperArm, driveTrain);
 
         addCommands(
                 new AutoPositionArm(gripperArm, AutoPositionArm.ArmPosition.PLACE_ELEM_MID).withTimeout(10.0),

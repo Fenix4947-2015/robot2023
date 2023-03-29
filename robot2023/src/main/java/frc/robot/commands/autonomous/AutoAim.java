@@ -10,16 +10,17 @@ package frc.robot.commands.autonomous;
 import java.util.Objects;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.SmartDashboardSettings;
 import frc.robot.limelight.Limelight;
 import frc.robot.subsystems.DriveTrain;
 
 public class AutoAim extends CommandBase {
-  public static final double K_FEED_FORWARD_ANGLE = 0.41;
+  public static final double K_FEED_FORWARD_ANGLE = 0.23;
   public static final double K_PID_P_ANGLE = 0.018;
   public static final double K_PID_I_ANGLE = 0.000;
-  public static final double K_PID_D_ANGLE = 0.002;
+  public static final double K_PID_D_ANGLE = 0.000;
 
   public static final double K_FEED_FORWARD_DISTANCE = 0.0;
   public static final double K_PID_P_DISTANCE = 0.35;
@@ -34,8 +35,6 @@ public class AutoAim extends CommandBase {
   private final DriveTrain _driveTrain;
   private final Limelight _limelight;
 
-  private final SmartDashboardSettings _smartDashboardSettings;
-
   private final int _pipeline;
 
   public double _driveCommand = 0.0;
@@ -46,11 +45,10 @@ public class AutoAim extends CommandBase {
 
   private boolean _isAtSetPoint = false;
 
-  public AutoAim(int pipeline, DriveTrain driveTrain, Limelight limelight, SmartDashboardSettings smartDashboardSettings) {
+  public AutoAim(int pipeline, DriveTrain driveTrain, Limelight limelight) {
     _pipeline = pipeline;
     _driveTrain = driveTrain;
     _limelight = limelight;
-    _smartDashboardSettings = smartDashboardSettings;
     addRequirements(_driveTrain, _limelight);
   }
 
@@ -66,8 +64,10 @@ public class AutoAim extends CommandBase {
   @Override
   public void execute() {
     _limelight.changePipeline(_pipeline);
-    refreshPidValues();
+    //refreshPidValues();
     updateTracking();
+    SmartDashboard.putNumber("AutoAim/_driveCommand", _driveCommand);
+    SmartDashboard.putNumber("AutoAim/_steerCommand", _steerCommand);
 
     if (_limelight.isTargetValid()) {
       _driveTrain.arcadeDrive(-_driveCommand, _steerCommand);
@@ -75,14 +75,6 @@ public class AutoAim extends CommandBase {
       _driveTrain.stop();
     }
 
-  }
-
-  private void refreshPidValues() {
-    _smartDashboardSettings.refreshPidValues();
-    if (Objects.equals(_smartDashboardSettings.getPidType(), PIDTYPE_AUTOAIM)) {
-      setAnglePID(_smartDashboardSettings.getPidP(), _smartDashboardSettings.getPidI(),
-          _smartDashboardSettings.getPidD(), _smartDashboardSettings.getPidF());
-    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -123,15 +115,15 @@ public class AutoAim extends CommandBase {
     }
 
     _pidAngle.setSetpoint(DESIRED_ANGLE);
-    _pidAngle.setTolerance(0.5);
-    double steer_cmd = _pidAngle.calculate(-tx);
+    _pidAngle.setTolerance(1.0);
+    double steer_cmd = _pidAngle.calculate(tx);
 
     double feedFwd = Math.signum(steer_cmd) * _feedForward;
     _steerCommand = steer_cmd + feedFwd;
 
     _pidDistance.setSetpoint(DESIRED_HEIGHT);
-    _pidDistance.setTolerance(0.5);
-    double drive_cmd = _pidDistance.calculate(-ty);
+    _pidDistance.setTolerance(2.0);
+    double drive_cmd = _pidDistance.calculate(ty);
 
     // try to drive forward until the target area reaches our desired area
     // double drive_cmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;

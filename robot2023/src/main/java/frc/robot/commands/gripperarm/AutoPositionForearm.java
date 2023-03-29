@@ -4,10 +4,13 @@
 
 package frc.robot.commands.gripperarm;
 
+import org.ejml.dense.block.MatrixOps_DDRB;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.exchange.SubSystemDataExchange;
 import frc.robot.subsystems.GripperArm;
 
 /**
@@ -24,15 +27,19 @@ public class AutoPositionForearm extends CommandBase {
     private final XboxController m_controller;
     private double _targetPosition;
     private boolean _isMoving;
+    private boolean _autoPositionEnabled;
+    private SubSystemDataExchange m_dataExchange;
 
 
-    public AutoPositionForearm(GripperArm gripperArm, XboxController xboxController) {
+    public AutoPositionForearm(GripperArm gripperArm, XboxController xboxController, SubSystemDataExchange dataExchange) {
         m_gripperArm = gripperArm;
         m_controller = xboxController;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(gripperArm);
         _targetPosition = m_gripperArm.getEncoderDistance();
         _isMoving = false;
+        _autoPositionEnabled = true;
+        m_dataExchange = dataExchange;
     }
 
     // Called when the command is initially scheduled.
@@ -63,7 +70,12 @@ public class AutoPositionForearm extends CommandBase {
         double move = applyDeadband(-m_controller.getRightY());
         double currentPosition = getCurrentForearmPosition();
         double speed = move;
-        if (m_gripperArm.isAutoEnabled()) {
+        if (move > 0.0) {
+            _autoPositionEnabled = true;
+        } else if (move < 0.0) {
+            _autoPositionEnabled = false;
+        }
+        if (m_gripperArm.isAutoEnabled() && _autoPositionEnabled) {
             if (move != 0) {
                 double moveFactor = currentPosition < (m_gripperArm.getCurrentVerticalArmPosition().maxAngleEncoderValue - 2.0) ? 2.0 : 1.0;
                 _targetPosition = currentPosition + move * moveFactor;
@@ -78,6 +90,12 @@ public class AutoPositionForearm extends CommandBase {
             if (_targetPosition >= currentPosition) {
                 speed = calculatePidMovement(_targetPosition);
             }
+        }
+
+        if (currentPosition > m_gripperArm.getCurrentVerticalArmPosition().autoAngleEncoderValue) {
+            m_dataExchange.setSpeedLimited(true);
+        } else {
+            m_dataExchange.setSpeedLimited(false);
         }
 
         SmartDashboard.putNumber("AutoPosForearm/currentPosition", currentPosition);

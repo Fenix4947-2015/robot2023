@@ -137,7 +137,11 @@ public class DriveTrain extends SubsystemBase {
         // SmartDashboard.putNumber("Right Current", m_rightLeader.getOutputCurrent());
         // SmartDashboard.putNumber("Right Applied Output", m_rightLeader.getAppliedOutput());
         // SmartDashboard.putNumber("Right Temperature (C)", m_rightLeader.getMotorTemperature());
+        SmartDashboard.putNumber("DT/Total Distance (m)", m_rightLeaderEncoder.getPosition());
 
         SmartDashboard.putNumber("DT/Heading", getHeading());
+        SmartDashboard.putNumber("DT/Yaw", m_gyro.getYaw());
+        SmartDashboard.putNumber("DT/Pitch", m_gyro.getPitch());
+        SmartDashboard.putNumber("DT/Roll", m_gyro.getRoll());
     }
 }

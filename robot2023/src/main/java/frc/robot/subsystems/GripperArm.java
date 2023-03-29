@@ -202,7 +202,7 @@ public class GripperArm extends SubsystemBase {
     }
 
     public enum VerticalArmPosition {
-        REAR(5.0, 5.0, 22.5, 0.0) {
+        REAR(5.0, 12.0, 22.5, 0.0) {
             @Override
             public VerticalArmPosition moveForward() {
                 return CENTRE;
@@ -213,7 +213,7 @@ public class GripperArm extends SubsystemBase {
                 return REAR;
             }
         },
-        CENTRE(5.0, 5.0, 26, 0.0) {
+        CENTRE(5.0, 15.0, 26, 0.0) {
             @Override
             public VerticalArmPosition moveForward() {
                 return FORWARD;
