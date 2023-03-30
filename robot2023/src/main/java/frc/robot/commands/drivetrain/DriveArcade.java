@@ -2,6 +2,7 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.exchange.SubSystemDataExchange;
@@ -35,6 +36,8 @@ public class DriveArcade extends CommandBase {
         rotation = m_dataExchange.getSpeedLimited() ? 0.6 * rotation : rotation;
 
         double rampedSpeed = m_slewRateLimiter.calculate(speed);
+
+        SmartDashboard.putNumber("DriveArcade/rampedSpeed", rampedSpeed);
 
         m_driveTrain.arcadeDrive(rampedSpeed, rotation);
     }

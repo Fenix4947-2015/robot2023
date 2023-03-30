@@ -18,6 +18,7 @@ import frc.robot.commands.autonomous.AutoAim;
 import frc.robot.commands.autonomous.DepositConeHigh;
 import frc.robot.commands.autonomous.DepositConeHighAndMore;
 import frc.robot.commands.autonomous.DepositConeMiddle;
+import frc.robot.commands.autonomous.drivetrain.AutoBalance;
 import frc.robot.commands.drivetrain.DriveArcade;
 import frc.robot.commands.gripperarm.*;
 import frc.robot.limelight.Limelight;
@@ -49,7 +50,7 @@ public class RobotContainer {
 
     // Commands.
     private final AutoAim _autoAimPick = new AutoAim(AutoAim.AUTOAIM_PICK_PIPELINE, m_driveTrain, m_limelight);
-
+    private final AutoBalance _aAutoBalance = new AutoBalance(m_driveTrain);
 
     private final DriveArcade m_driveArcade = new DriveArcade(m_driverController.getHID(), m_driveTrain, dataExchange);
     private final CommandBase m_shiftHigh = new InstantCommand(m_driveTrain::shiftHigh);
@@ -159,6 +160,7 @@ public class RobotContainer {
         m_driverController.b().whileTrue(m_instantCommands.closeGripper());
         m_driverController.y().whileTrue(m_instantCommands.openGripper());
         m_driverController.a().whileTrue(_autoAimPick);
+        m_driverController.x().whileTrue(_aAutoBalance);
         //m_driverController.back().onTrue(m_toggleElbow);
         //m_driverController.povLeft().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmBackward));
         //m_driverController.povRight().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmForward));

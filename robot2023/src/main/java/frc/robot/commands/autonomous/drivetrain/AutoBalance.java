@@ -14,7 +14,7 @@ import java.time.Instant;
 public class AutoBalance extends CommandBase {
 
 
-    private final double m_targetPositionMeters;
+    private static final double TARGET_ANGLE = 0.0;
     private final DriveTrain m_driveTrain;
     private final PIDController m_pidController;
     
@@ -46,20 +46,13 @@ public class AutoBalance extends CommandBase {
 
     @Override
     public void execute() {
-        final Instant now = Instant.now();
-        final double dtSeconds = ((double) Duration.between(lastTime, now).toMillis()) / 1000.0;
-        final double currPos = getCurrentPosition();
-        final double velocity = (currPos - lastPos) / dtSeconds;
-        lastPos = currPos;
+        final double currAngle = getCurrentAngle();
+        lastPos = currAngle;
 
-        double feedforward = DriveTrainConstants.m_feedFwdLow.calculate(velocity);
-
-        double ffSpeed = feedforward / RobotController.getBatteryVoltage();
-        double nextVal = MathUtil.clamp(m_pidController.calculate(currPos, m_targetPositionMeters), -0.6, 0.6);
+        double nextVal = MathUtil.clamp(m_pidController.calculate(currAngle, TARGET_ANGLE), -0.6, 0.6);
         double rotation = 0;//-m_driveTrain.getHeading();
 
-        double speed = MathUtil.clamp(nextVal + ffSpeed, -1.0, 1.0);
-        System.out.println(String.format("Pos: %f, Speed: %f ; Rotation: %f ; Feedforward: %f", currPos, speed, rotation, feedforward));
+        double speed = MathUtil.clamp(nextVal, -1.0, 1.0);
 
         m_driveTrain.arcadeDrive(speed, rotation);
     }
