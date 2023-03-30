@@ -99,6 +99,10 @@ public class DriveTrain extends SubsystemBase {
         return -1.0 * m_gyro.getAngle();
     }
 
+    public double getRoll() {
+        return m_gyro.getRoll();
+    }
+
     public double getPosition() {
         return (m_leftLeaderEncoder.getPosition() + m_rightLeaderEncoder.getPosition()) / 2.0;
     }
