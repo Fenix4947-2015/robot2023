@@ -111,7 +111,7 @@ public class AutoPositionArm extends CommandBase {
         HOME(0.0, VerticalArmPosition.REAR),
         TRAVEL(0.0, VerticalArmPosition.CENTRE),
         PICK_ELEM_FLOOR(6.0, VerticalArmPosition.FORWARD),
-        PICK_ELEM_STATION(15.0, VerticalArmPosition.REAR),
+        PICK_ELEM_STATION(18.5, VerticalArmPosition.CENTRE),
         PLACE_ELEM_TOP(33.5, VerticalArmPosition.FORWARD),
         INSERT_ELEM_TOP(31.5, VerticalArmPosition.FORWARD),
         PLACE_ELEM_MID(18.5, VerticalArmPosition.CENTRE);

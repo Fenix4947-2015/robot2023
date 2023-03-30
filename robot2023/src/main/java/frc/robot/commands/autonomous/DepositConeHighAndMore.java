@@ -12,9 +12,9 @@ import frc.robot.commands.InstantCommands;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.GripperArm;
 
-public class DepositConeHigh extends SequentialCommandGroup {
+public class DepositConeHighAndMore extends SequentialCommandGroup {
 
-    public DepositConeHigh(DriveTrain driveTrain, GripperArm gripperArm, Limelight limelight) {
+    public DepositConeHighAndMore(DriveTrain driveTrain, GripperArm gripperArm, Limelight limelight) {
         InstantCommands instantCommands = new InstantCommands(gripperArm, driveTrain);
 
         addCommands(
@@ -35,7 +35,14 @@ public class DepositConeHigh extends SequentialCommandGroup {
                     new AutoPositionArm(gripperArm, AutoPositionArm.ArmPosition.TRAVEL).withTimeout(10.0)),
                 instantCommands.retractKickstand(),
                 new TurnAngle(180., driveTrain).withTimeout(5.0),
-                new AutoPositionArm(gripperArm, AutoPositionArm.ArmPosition.PICK_ELEM_FLOOR).withTimeout(5.0)
+                new AutoPositionArm(gripperArm, AutoPositionArm.ArmPosition.PICK_ELEM_FLOOR).withTimeout(5.0),
+                new AutoAim(AutoAim.AUTOAIM_PICK_PIPELINE, driveTrain, limelight).withTimeout(5.0),
+                instantCommands.shiftHigh(),
+                instantCommands.closeGripper(),
+                Commands.waitSeconds(0.5),
+                new AutoPositionArm(gripperArm, AutoPositionArm.ArmPosition.TRAVEL).withTimeout(5.0),
+                new TurnAngle(-180., driveTrain).withTimeout(5.0),
+                new DriveStraight(2.5, driveTrain).withTimeout(5.0)
                 );
     }
 }

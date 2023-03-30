@@ -16,6 +16,7 @@ import frc.robot.commands.InstantCommands;
 import frc.robot.commands.StopAll;
 import frc.robot.commands.autonomous.AutoAim;
 import frc.robot.commands.autonomous.DepositConeHigh;
+import frc.robot.commands.autonomous.DepositConeHighAndMore;
 import frc.robot.commands.autonomous.DepositConeMiddle;
 import frc.robot.commands.drivetrain.DriveArcade;
 import frc.robot.commands.gripperarm.*;
@@ -71,6 +72,7 @@ public class RobotContainer {
     // Autonomous commands.
     private final CommandBase m_autoNone = new PrintCommand("No autonomous command selected");
     private final CommandBase m_depositConeHigh = new DepositConeHigh(m_driveTrain, m_gripperArm, m_limelight);
+    private final CommandBase m_depositConeHighAndMore = new DepositConeHighAndMore(m_driveTrain, m_gripperArm, m_limelight);
     private final CommandBase m_depositConeMiddle = new DepositConeMiddle(m_driveTrain, m_gripperArm);
 
     private final SendableChooser<Integer> m_autonomousDelayChooser = new SendableChooser<>();
@@ -105,6 +107,7 @@ public class RobotContainer {
         m_autonomousCommandChooser.setDefaultOption("None", m_autoNone);
         m_autonomousCommandChooser.addOption("Deposit Cone Middle", m_depositConeMiddle);
         m_autonomousCommandChooser.addOption("Deposit Cone High", m_depositConeHigh);
+        m_autonomousCommandChooser.addOption("Deposit Cone High + Find Limelight", m_depositConeHighAndMore);
     }
 
     private void configureSmartDashboard() {
