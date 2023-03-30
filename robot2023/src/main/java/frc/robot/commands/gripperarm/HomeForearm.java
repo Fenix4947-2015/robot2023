@@ -61,7 +61,7 @@ public class HomeForearm extends CommandBase {
                 state = State.LOCKING;
             }
         } else if (state == State.LOCKING) { 
-            if (timer.get() > 0.25) {
+            if (timer.get() > 0.25 && m_gripperArm.isForearmAtHome()) {
                 m_gripperArm.lockElbow();
                 state = State.LOCKED;
                 timer.reset();
