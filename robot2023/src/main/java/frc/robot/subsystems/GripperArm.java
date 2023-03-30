@@ -29,7 +29,8 @@ public class GripperArm extends SubsystemBase {
 
     private final Encoder m_encoder = new Encoder(hardwareConstants.getArmEncoderChannel1(), hardwareConstants.getArmEncoderChannel2());
 
-    private final DigitalInput m_limitSwitch = new DigitalInput(hardwareConstants.getArmLimitSwitchDigitalInput());
+    private final DigitalInput m_limitSwitchArm = new DigitalInput(hardwareConstants.getArmLimitSwitchDigitalInput());
+    private final DigitalInput m_limitSwitchElbow = new DigitalInput(hardwareConstants.getArmLimitSwitchDigitalInput());
 
     private VerticalArmPosition currentVerticalArmPosition = VerticalArmPosition.REAR;
 
@@ -198,7 +199,11 @@ public class GripperArm extends SubsystemBase {
     }
 
     public boolean isForearmAtHome() {
-        return !m_limitSwitch.get();
+        return !m_limitSwitchArm.get();
+    }
+
+    public boolean isElbowUp() {
+        return !m_limitSwitchElbow.get();
     }
 
     public enum VerticalArmPosition {

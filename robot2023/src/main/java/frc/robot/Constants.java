@@ -44,7 +44,9 @@ public final class Constants {
 
         int getArmEncoderChannel1();
         int getArmEncoderChannel2();
+
         int getArmLimitSwitchDigitalInput();
+        int getElbowLimitSwitchDigitalInput();
 
         int getSpareTalonDeviceNumber();
 
@@ -144,6 +146,11 @@ public final class Constants {
             return 7;
         }
 
+        @Override
+        public int getElbowLimitSwitchDigitalInput() {
+            return 6;
+        }
+
         @Override 
         public PneumaticsModuleType getPneumaticsModuleType() {
             return PneumaticsModuleType.CTREPCM;
@@ -241,6 +248,11 @@ public final class Constants {
         @Override
         public int getArmLimitSwitchDigitalInput() {
             return 9;
+        }
+
+        @Override
+        public int getElbowLimitSwitchDigitalInput() {
+            return 8;
         }
 
         @Override 
