@@ -252,7 +252,7 @@ public final class Constants {
 
         @Override
         public int getElbowLimitSwitchDigitalInput() {
-            return 7;
+            return 3;
         }
 
         @Override 

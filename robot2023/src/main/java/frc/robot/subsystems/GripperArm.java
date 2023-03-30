@@ -30,7 +30,7 @@ public class GripperArm extends SubsystemBase {
     private final Encoder m_encoder = new Encoder(hardwareConstants.getArmEncoderChannel1(), hardwareConstants.getArmEncoderChannel2());
 
     private final DigitalInput m_limitSwitchArm = new DigitalInput(hardwareConstants.getArmLimitSwitchDigitalInput());
-    private final DigitalInput m_limitSwitchElbow = new DigitalInput(hardwareConstants.getArmLimitSwitchDigitalInput());
+    private final DigitalInput m_limitSwitchElbow = new DigitalInput(hardwareConstants.getElbowLimitSwitchDigitalInput());
 
     private VerticalArmPosition currentVerticalArmPosition = VerticalArmPosition.REAR;
 
