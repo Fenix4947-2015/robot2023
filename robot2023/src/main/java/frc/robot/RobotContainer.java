@@ -20,6 +20,7 @@ import frc.robot.commands.autonomous.DepositConeHighAndMore;
 import frc.robot.commands.autonomous.DepositConeMiddle;
 import frc.robot.commands.autonomous.DunkyCone;
 import frc.robot.commands.autonomous.drivetrain.AutoBalance;
+import frc.robot.commands.autonomous.drivetrain.AutoBrake;
 import frc.robot.commands.drivetrain.DriveArcade;
 import frc.robot.commands.gripperarm.*;
 import frc.robot.limelight.Limelight;
@@ -71,6 +72,7 @@ public class RobotContainer {
     private final AutoPositionArm m_positionArmPlaceElemTop = new AutoPositionArm(m_gripperArm, AutoPositionArm.ArmPosition.PLACE_ELEM_TOP);
 
     private final DunkyCone m_dunkyCone = new DunkyCone(m_driveTrain, m_gripperArm, m_limelight);
+    private final AutoBrake m_autoBrake = new AutoBrake(m_driveTrain);
     
     // Autonomous commands.
     private final CommandBase m_autoNone = new PrintCommand("No autonomous command selected");
@@ -163,7 +165,7 @@ public class RobotContainer {
         m_driverController.leftBumper().onTrue(m_shiftLow);
         m_driverController.b().whileTrue(m_instantCommands.closeGripper());
         m_driverController.y().whileTrue(m_instantCommands.openGripper());
-        m_driverController.a().whileTrue(m_dunkyCone);
+        m_driverController.a().whileTrue(m_autoBrake);
         m_driverController.x().whileTrue(_aAutoBalance);
         //m_driverController.back().onTrue(m_toggleElbow);
         //m_driverController.povLeft().onTrue(new InstantCommand(m_gripperArm::moveVerticalArmBackward));
@@ -184,7 +186,8 @@ public class RobotContainer {
         m_helperController.start().whileTrue(m_positionArmHome);
         m_helperController.a().whileTrue(m_positionArmPickElemFloor);
         m_helperController.b().whileTrue(m_positionArmPickElemStation);
-        m_helperController.x().whileTrue(m_positionArmPlaceElemMid);
+        //m_helperController.x().whileTrue(m_positionArmPlaceElemMid);
+        m_helperController.x().whileTrue(m_dunkyCone);
         m_helperController.y().whileTrue(m_positionArmPlaceElemTop);
 
         m_helperController.rightBumper().onTrue(m_instantCommands.closeGripper());
