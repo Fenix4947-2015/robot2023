@@ -50,7 +50,7 @@ public class HomeForearm extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (state == State.INIT) {
+        if (state == State.INIT && !m_gripperArm.isElbowUp()) {
             m_gripperArm.unlockElbow();
             m_gripperArm.moveForearm(0);
             state = State.UNLOCKED;
