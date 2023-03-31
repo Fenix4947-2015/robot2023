@@ -77,10 +77,10 @@ public class AutoPositionArm extends CommandBase {
             }
         }
 
-        SmartDashboard.putNumber("AutoPosArm/speed", speed);
-        SmartDashboard.putNumber("AutoPosArm/setpoint", pid.getSetpoint());
-        SmartDashboard.putBoolean("AutoPosArm/isAtSetpoint", pid.atSetpoint());
-        SmartDashboard.putBoolean("AutoPosArm/vertArmInPos", vertArmInDesiredPos);
+        //SmartDashboard.putNumber("AutoPosArm/speed", speed);
+        //SmartDashboard.putNumber("AutoPosArm/setpoint", pid.getSetpoint());
+        //SmartDashboard.putBoolean("AutoPosArm/isAtSetpoint", pid.atSetpoint());
+        //SmartDashboard.putBoolean("AutoPosArm/vertArmInPos", vertArmInDesiredPos);
 
         m_gripperArm.moveForearm(speed);
     }

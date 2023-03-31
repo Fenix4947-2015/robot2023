@@ -24,9 +24,9 @@ public class AutoBalance extends CommandBase {
     public AutoBalance(DriveTrain driveTrain) {
         m_driveTrain = driveTrain;
 
-        SmartDashboard.putNumber("AutoBalance/PID_kp", 0.03);
+        //SmartDashboard.putNumber("AutoBalance/PID_kp", 0.03);
 
-        final double kp = SmartDashboard.getNumber("AutoBalance/PID_kp", 3.0);
+        final double kp = 0.03; //SmartDashboard.getNumber("AutoBalance/PID_kp", 0.03);
 
         m_pidController = new PIDController(kp, 0.0, 0.0);
         m_pidController.setTolerance(0.25);

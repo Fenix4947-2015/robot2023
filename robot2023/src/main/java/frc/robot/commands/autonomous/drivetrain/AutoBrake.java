@@ -24,11 +24,11 @@ public class AutoBrake extends CommandBase {
     public AutoBrake(DriveTrain driveTrain) {
         m_driveTrain = driveTrain;
 
-        SmartDashboard.putNumber("AutoBrake/PID_kp", 1.5);
-        SmartDashboard.putNumber("AutoBrake/PID_ki", 0.5);
+        //SmartDashboard.putNumber("AutoBrake/PID_kp", 1.5);
+        //SmartDashboard.putNumber("AutoBrake/PID_ki", 0.5);
 
-        final double kp = SmartDashboard.getNumber("AutoBrake/PID_kp", 1.5);
-        final double ki = SmartDashboard.getNumber("AutoBrake/PID_ki", 0.5);
+        final double kp = 1.5; //SmartDashboard.getNumber("AutoBrake/PID_kp", 1.5);
+        final double ki = 0.5; // SmartDashboard.getNumber("AutoBrake/PID_ki", 0.5);
 
         m_pidController = new PIDController(kp, ki, 0.0);
         m_pidController.setTolerance(0.02);
@@ -64,10 +64,10 @@ public class AutoBrake extends CommandBase {
 
         double speed = MathUtil.clamp(nextVal, -1.0, 1.0);
 
-        SmartDashboard.putNumber("AutoBrake/speed", speed);
-        SmartDashboard.putNumber("AutoBrake/ffSpeed", ffSpeed);
-        SmartDashboard.putNumber("AutoBrake/targetPos", targetPos);
-        SmartDashboard.putNumber("AutoBrake/currPos", currPos);
+        //SmartDashboard.putNumber("AutoBrake/speed", speed);
+        //SmartDashboard.putNumber("AutoBrake/ffSpeed", ffSpeed);
+        //SmartDashboard.putNumber("AutoBrake/targetPos", targetPos);
+        //SmartDashboard.putNumber("AutoBrake/currPos", currPos);
 
         m_driveTrain.arcadeDrive(speed, rotation);
     }

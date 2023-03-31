@@ -25,11 +25,11 @@ public class DriveStraight extends CommandBase {
         m_driveTrain = driveTrain;
         m_targetPositionMeters = targetPositionMeters ;
 
-        SmartDashboard.putNumber("DT/PID_kp", 1.5);
-        SmartDashboard.putNumber("DT/PID_ki", 0.5);
+        //SmartDashboard.putNumber("DT/PID_kp", 1.5);
+        //SmartDashboard.putNumber("DT/PID_ki", 0.5);
 
-        final double kp = SmartDashboard.getNumber("DT/PID_kp", 1.5);
-        final double ki = SmartDashboard.getNumber("DT/PID_ki", 0.5);
+        final double kp = 1.5;//SmartDashboard.getNumber("DT/PID_kp", 1.5);
+        final double ki = 0.5;//SmartDashboard.getNumber("DT/PID_ki", 0.5);
 
         m_pidController = new PIDController(kp, ki, 0.0);
         m_pidController.setTolerance(0.25);
@@ -63,7 +63,7 @@ public class DriveStraight extends CommandBase {
         double rotation = 0;//-m_driveTrain.getHeading();
 
         double speed = MathUtil.clamp(nextVal + ffSpeed, -1.0, 1.0);
-        System.out.println(String.format("Pos: %f, Speed: %f ; Rotation: %f ; Feedforward: %f", currPos, speed, rotation, feedforward));
+        //System.out.println(String.format("Pos: %f, Speed: %f ; Rotation: %f ; Feedforward: %f", currPos, speed, rotation, feedforward));
 
         m_driveTrain.arcadeDrive(speed, rotation);
     }

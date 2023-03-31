@@ -94,7 +94,7 @@ public class RobotContainer {
         // Configure the trigger bindings
         configureBindings();
         configureDefaultCommands();
-        configureAutonomousCommands();
+        //configureAutonomousCommands();
         configureSmartDashboard();
 
         m_gripperArm.initialize();
@@ -127,8 +127,8 @@ public class RobotContainer {
         // SmartDashboard.putData(m_intake);
         // SmartDashboard.putData(m_shooter);
 
-        SmartDashboard.putData("Commands/Shift High", m_shiftHigh);
-        SmartDashboard.putData("Commands/Shift Low", m_shiftLow);
+        //SmartDashboard.putData("Commands/Shift High", m_shiftHigh);
+        //SmartDashboard.putData("Commands/Shift Low", m_shiftLow);
 
         // SmartDashboard.putData("Commands/Move Shooter Up", m_moveShooterUp);
         // SmartDashboard.putData("Commands/Move Shooter Down", m_moveShooterDown);
@@ -141,12 +141,12 @@ public class RobotContainer {
 
         // SmartDashboard.putData("Commands/Unlatch Winch", m_unlatchWinch);
 
-        SmartDashboard.putData("Commands/Stop All", m_stopAll);
+        //SmartDashboard.putData("Commands/Stop All", m_stopAll);
 
         // SmartDashboard.putBoolean("Winch/Override 30 sec endmatch", false);
 
-        SmartDashboard.putData("Autonomous Delay", m_autonomousDelayChooser);
-        SmartDashboard.putData("Autonomous Command", m_autonomousCommandChooser);
+        //SmartDashboard.putData("Autonomous Delay", m_autonomousDelayChooser);
+        //SmartDashboard.putData("Autonomous Command", m_autonomousCommandChooser);
     }
 
     /**
@@ -206,12 +206,15 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+        return m_depositConeHigh;
+        /*
         int autonomousDelay = getAutonomousDelay();
         if (autonomousDelay > 0) {
             return m_autonomousCommandChooser.getSelected().beforeStarting(new WaitCommand(autonomousDelay));
         }
 
         return Optional.ofNullable(m_autonomousCommandChooser.getSelected()).orElse(m_depositConeHigh);
+         */
     }
 
     private int getAutonomousDelay() {

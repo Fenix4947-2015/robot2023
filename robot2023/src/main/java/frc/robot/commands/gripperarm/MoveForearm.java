@@ -52,7 +52,7 @@ public class MoveForearm extends CommandBase {
             speed = KEEP_STATIONARY_POWER;
         }
 
-        SmartDashboard.putNumber("MoveForearm/speed", speed);
+        //SmartDashboard.putNumber("MoveForearm/speed", speed);
         m_gripperArm.moveForearm(speed);
     }
 

@@ -98,9 +98,9 @@ public class AutoPositionForearm extends CommandBase {
             m_dataExchange.setSpeedLimited(false);
         }
 
-        SmartDashboard.putNumber("AutoPosForearm/currentPosition", currentPosition);
-        SmartDashboard.putNumber("AutoPosForearm/targetPosition", _targetPosition);
-        SmartDashboard.putNumber("AutoPosForearm/speed", speed);
+        //SmartDashboard.putNumber("AutoPosForearm/currentPosition", currentPosition);
+        //SmartDashboard.putNumber("AutoPosForearm/targetPosition", _targetPosition);
+        //SmartDashboard.putNumber("AutoPosForearm/speed", speed);
         m_gripperArm.moveForearm(speed);
     }
 

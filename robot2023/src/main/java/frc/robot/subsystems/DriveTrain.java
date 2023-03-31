@@ -128,14 +128,14 @@ public class DriveTrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("DT/Left Distance (m)", m_leftLeaderEncoder.getPosition());
+        //SmartDashboard.putNumber("DT/Left Distance (m)", m_leftLeaderEncoder.getPosition());
         // SmartDashboard.putNumber("Left Speed (m/s)", m_leftLeaderEncoder.getVelocity());
         // SmartDashboard.putNumber("Left Bus Voltage", m_leftLeader.getBusVoltage());
         // SmartDashboard.putNumber("Left Current", m_leftLeader.getOutputCurrent());
         // SmartDashboard.putNumber("Left Applied Output", m_leftLeader.getAppliedOutput());
         // SmartDashboard.putNumber("Left Temperature (C)", m_leftLeader.getMotorTemperature());
 
-        SmartDashboard.putNumber("DT/Right Distance (m)", m_rightLeaderEncoder.getPosition());
+        //SmartDashboard.putNumber("DT/Right Distance (m)", m_rightLeaderEncoder.getPosition());
         // SmartDashboard.putNumber("Right Speed (m/s)", m_rightLeaderEncoder.getVelocity());
         // SmartDashboard.putNumber("Right Bus Voltage", m_rightLeader.getBusVoltage());
         // SmartDashboard.putNumber("Right Current", m_rightLeader.getOutputCurrent());

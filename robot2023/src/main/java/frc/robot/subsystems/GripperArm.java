@@ -73,9 +73,9 @@ public class GripperArm extends SubsystemBase {
         // This method will be called once per scheduler run
         SmartDashboard.putNumber("Arm/Encoder", getEncoderDistance());
         SmartDashboard.putString("Arm/VerticalPos", currentVerticalArmPosition.name());
-        SmartDashboard.putBoolean("Arm/LSArm", isForearmAtHome());
-        SmartDashboard.putBoolean("Arm/LSElbow", isElbowUp());
-        SmartDashboard.putNumber("Arm/ForearmSpeed", getForearmSpeed());
+        //SmartDashboard.putBoolean("Arm/LSArm", isForearmAtHome());
+        //SmartDashboard.putBoolean("Arm/LSElbow", isElbowUp());
+        //SmartDashboard.putNumber("Arm/ForearmSpeed", getForearmSpeed());
     }
 
     @Override
