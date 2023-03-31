@@ -31,7 +31,7 @@ public class DepositConeHigh extends SequentialCommandGroup {
                 new AutoPositionArm(gripperArm, AutoPositionArm.ArmPosition.PLACE_ELEM_TOP).withTimeout(10.0),
                 new DriveStraight(-0.9, driveTrain).withTimeout(5.0),
                 new ParallelCommandGroup(
-                    new DriveStraight(-2.2, driveTrain).withTimeout(5.0),
+                    new DriveStraight(-3.0, driveTrain).withTimeout(5.0),
                     new AutoPositionArm(gripperArm, AutoPositionArm.ArmPosition.TRAVEL).withTimeout(10.0)),
                 instantCommands.retractKickstand(),
                 new TurnAngle(180., driveTrain).withTimeout(5.0),
