@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import javax.xml.crypto.Data;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -209,7 +211,7 @@ public class RobotContainer {
             return m_autonomousCommandChooser.getSelected().beforeStarting(new WaitCommand(autonomousDelay));
         }
 
-        return m_autonomousCommandChooser.getSelected();
+        return Optional.ofNullable(m_autonomousCommandChooser.getSelected()).orElse(m_depositConeHigh);
     }
 
     private int getAutonomousDelay() {
