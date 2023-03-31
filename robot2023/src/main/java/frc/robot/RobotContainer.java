@@ -110,10 +110,10 @@ public class RobotContainer {
             m_autonomousDelayChooser.addOption(String.valueOf(i), i);
         }
 
-        m_autonomousCommandChooser.setDefaultOption("None", m_autoNone);
+        m_autonomousCommandChooser.setDefaultOption("Deposit Cone High", m_depositConeHigh);
+        m_autonomousCommandChooser.addOption("None", m_autoNone);
         m_autonomousCommandChooser.addOption("Home forearm only", m_autoHomeForearm);
         m_autonomousCommandChooser.addOption("Deposit Cone Middle", m_depositConeMiddle);
-        m_autonomousCommandChooser.addOption("Deposit Cone High", m_depositConeHigh);
         m_autonomousCommandChooser.addOption("Deposit Cone High + Find Limelight", m_depositConeHighAndMore);
     }
 

@@ -23,7 +23,7 @@ public class DunkyCone extends SequentialCommandGroup {
                 Commands.waitSeconds(0.25),
                 new DriveStraight(-0.1, driveTrain).withTimeout(5.0),
                 new AutoPositionArm(gripperArm, AutoPositionArm.ArmPosition.PLACE_ELEM_TOP).withTimeout(10.0),
-                new DriveStraight(-0.3, driveTrain).withTimeout(5.0)
+                new DriveStraight(-0.5, driveTrain).withTimeout(5.0)
             );
     }
 }
