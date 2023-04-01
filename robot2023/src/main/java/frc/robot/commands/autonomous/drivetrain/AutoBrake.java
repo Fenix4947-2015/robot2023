@@ -27,7 +27,7 @@ public class AutoBrake extends CommandBase {
         //SmartDashboard.putNumber("AutoBrake/PID_kp", 1.5);
         //SmartDashboard.putNumber("AutoBrake/PID_ki", 0.5);
 
-        final double kp = 1.5; //SmartDashboard.getNumber("AutoBrake/PID_kp", 1.5);
+        final double kp = 3.0; //SmartDashboard.getNumber("AutoBrake/PID_kp", 1.5);
         final double ki = 0.5; // SmartDashboard.getNumber("AutoBrake/PID_ki", 0.5);
 
         m_pidController = new PIDController(kp, ki, 0.0);
